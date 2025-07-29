@@ -1,0 +1,22 @@
+# Refer https://docs.halo.run/developer-guide/plugin/basics/manifest
+
+apiVersion: plugin.halo.run/v1alpha1
+kind: Plugin
+metadata:
+  # The name defines how the plugin is invoked, A unique name
+  name: links-health-monitor
+spec:
+  enabled: true
+  requires: ">=2.21.0"
+  author:
+    name: Denchouka
+    website: https://github.com/Denchouka
+  logo: logo.png
+  homepage: https://github.com/Denchouka/links-health-monitor#readme
+  repo: https://github.com/Denchouka/links-health-monitor
+  issues: https://github.com/Denchouka/links-health-monitor/issues
+  displayName: "links-health-monitor"
+  description: "links-health-monitor - Halo 插件"
+  license:
+    - name: "GPL-3.0"
+      url: "https://github.com/Denchouka/links-health-monitor/blob/main/LICENSE"
