@@ -10,13 +10,13 @@ spec:
   requires: ">=2.21.0"
   author:
     name: Denchouka
-    website: https://github.com/Denchouka
+    website: https://tch.cool
   logo: logo.png
-  homepage: https://github.com/Denchouka/links-health-monitor#readme
-  repo: https://github.com/Denchouka/links-health-monitor
-  issues: https://github.com/Denchouka/links-health-monitor/issues
-  displayName: "links-health-monitor"
-  description: "links-health-monitor - Halo 插件"
+  homepage: https://github.com/denchouka/plugin-links-health-monitor#readme
+  repo: https://github.com/denchouka/plugin-links-health-monitor
+  issues: https://github.com/denchouka/plugin-links-health-monitor/issues
+  displayName: "Links Health Monitor"
+  description: "友情链接健康监测插件"
   license:
     - name: "GPL-3.0"
-      url: "https://github.com/Denchouka/links-health-monitor/blob/main/LICENSE"
+      url: "https://github.com/denchouka/plugin-links-health-monitor/blob/main/LICENSE"
