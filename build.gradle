@@ -4,7 +4,7 @@ plugins {
     id "run.halo.plugin.devtools" version "0.6.1"
 }
 
-group 'cool.tch.linkshealthmonitor'
+group = 'cool.tch.linkshealthmonitor'
 
 repositories {
     mavenCentral()

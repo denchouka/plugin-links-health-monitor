@@ -3,7 +3,7 @@ plugins {
     id "com.github.node-gradle.node" version "7.1.0"
 }
 
-group 'cool.tch.linkshealthmonitor.ui'
+group = 'cool.tch.linkshealthmonitor.ui'
 
 tasks.register('pnpmBuild', PnpmTask) {
     group = 'build'
@@ -30,4 +30,11 @@ tasks.named('check') {
 
 tasks.named('assemble') {
     dependsOn tasks.named('pnpmBuild')
+}
+
+tasks.named('pnpmSetup') {
+    doFirst {
+        println "PATH: " + System.getenv('PATH')
+        println "npm: " + ['which', 'npm'].execute().text
+    }
 }
