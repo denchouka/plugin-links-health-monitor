@@ -1,4 +1,4 @@
-package config;
+package cool.tch.linkshealthmonitor.config;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class LinksHealthMonitorConfig {
         public static final String GROUP = "basic";
 
         // 是否自定义Cron
-        private boolean isCustomizedCron;
+        private boolean customizedCronEnable;
 
         // 自定义cron
         private String customizedCron;
