@@ -17,6 +17,10 @@ spec:
   issues: https://github.com/denchouka/plugin-links-health-monitor/issues
   displayName: "Links Health Monitor"
   description: "友情链接健康监测插件"
+  configMapName: links-health-monitor-setting-configMap
+  settingName: links-health-monitor-setting
+  pluginDependencies:
+    "PluginLinks": ">=1.6.1"
   license:
     - name: "GPL-3.0"
       url: "https://github.com/denchouka/plugin-links-health-monitor/blob/main/LICENSE"

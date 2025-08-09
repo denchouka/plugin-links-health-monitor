@@ -1,0 +1,44 @@
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: links-health-monitor-setting
+spec:
+  forms:
+    - group: basic
+      label: 基本设置
+      formSchema:
+        - $formkit: checkbox
+          name: isCustomizedCron
+          key: isCustomizedCron
+          id: isCustomizedCron
+          label: 是否自定义Cron
+          value: false
+          help: 是否自定义监测友链的Cron表达式，默认每天0点监测一次
+        - $formkit: text
+          if: $get(isCustomizedCron).value === true
+          name: customizedCron
+          key: customizedCron
+          id: customizedCron
+          label: 自定义cron
+          placeholder: 请输入自定义cron
+          help: 用于配置监测友链的定时任务的时间表达式
+        - $formkit: select
+          name: notRequierdMonitorlinks
+          key: notRequierdMonitorlinks
+          id: notRequierdMonitorlinks
+          label: 无需监测友链
+          placeholder: 请选择不需要监测的友链
+          multiple: true
+          searchable: true
+          action: /apis/api.plugin.halo.run/v1alpha1/plugins/PluginLinks/links
+          requestOption:
+            method: GET
+            pageField: page
+            sizeField: size
+            totalField: total
+            itemsField: items
+            labelField: spec.displayName
+            valueField: metadata.name
+            fieldSelectorKey: spec.displayName
+          validation: required
+          help: 请选择不需要监测的友链
