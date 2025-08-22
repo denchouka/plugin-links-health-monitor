@@ -1,37 +1,18 @@
 package cool.tch.linkshealthmonitor.config;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-import run.halo.app.plugin.ReactiveSettingFetcher;
 
-@Component
-@RequiredArgsConstructor
+@Data
 public class LinksHealthMonitorConfig {
 
-    private final ReactiveSettingFetcher reactiveSettingFetcher;
+    public static final String GROUP = "basic";
 
-    public Mono<BasicConfig> getBasicConfig() {
-        return reactiveSettingFetcher.fetch(BasicConfig.GROUP, BasicConfig.class)
-            .defaultIfEmpty(new BasicConfig());
-    }
+    // 是否自定义Cron
+    private boolean customizedCronEnable;
 
-    /**
-     * 基本设置
-     */
-    @Data
-    class BasicConfig {
+    // 自定义cron
+    private String customizedCron;
 
-        public static final String GROUP = "basic";
-
-        // 是否自定义Cron
-        private boolean customizedCronEnable;
-
-        // 自定义cron
-        private String customizedCron;
-
-        // 无需监测友链
-        private String notRequierdMonitorlinks;
-    }
+    // 无需监测友链
+    private String[] notRequierdMonitorlinks;
 }
