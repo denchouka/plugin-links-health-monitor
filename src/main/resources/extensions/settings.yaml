@@ -20,8 +20,9 @@ spec:
           key: customizedCron
           id: customizedCron
           label: 自定义cron
-          placeholder: 请输入自定义cron
-          help: 用于配置监测友链的定时任务的时间表达式
+          validation: required
+          placeholder: 请输入自定义Cron
+          help: 用于配置监测友链的定时任务的时间表达式，Cron表达式格式有误时使用默认配置
         - $formkit: select
           name: notRequierdMonitorlinks
           key: notRequierdMonitorlinks
