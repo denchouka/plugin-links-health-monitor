@@ -27,7 +27,7 @@ public class LinksHealthMonitorResult extends AbstractExtension {
     @Data
     public static class ResultSpec {
 
-        // 是否自定义Cron
+        // 是否启用自定义Cron表达式
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private Boolean customizedCronEnable;
 
@@ -35,17 +35,21 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String customizedCron;
 
-        // 实际执行任务的cron
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        private String practivalCron;
-
         // 自定义Cron是否可用
         @Schema(defaultValue = "true")
         private Boolean customizedCronAvailable;
 
+        // 实际执行任务的cron
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        private String practicalCron;
+
         // 执行任务的时间
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        private String monitorDate;
+        private String monitorDateTime;
+
+        // 执行任务的时长（单位：毫秒）
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        private String monitorDuration;
 
         // 友链监测记录
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)

@@ -1,5 +1,6 @@
 package cool.tch.linkshealthmonitor.task;
 
+import org.springframework.scheduling.support.CronExpression;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public class LinksHealthMonitorUtil {
      * @return
      */
     public static boolean checkCronExpression(String cronExpression) {
-        return false;
+        return CronExpression.isValidExpression(cronExpression);
     }
 
     /**
