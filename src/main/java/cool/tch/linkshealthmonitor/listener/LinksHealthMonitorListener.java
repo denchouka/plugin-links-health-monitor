@@ -1,6 +1,6 @@
 package cool.tch.linkshealthmonitor.listener;
 
-import cool.tch.linkshealthmonitor.task.LinksHealthMonitorTaskScheduler;
+import cool.tch.linkshealthmonitor.task.LinksHealthMonitorTask;
 import cool.tch.linkshealthmonitor.config.LinksHealthMonitorConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -16,7 +16,7 @@ import run.halo.app.plugin.PluginConfigUpdatedEvent;
 @RequiredArgsConstructor
 public class LinksHealthMonitorListener {
 
-    private final LinksHealthMonitorTaskScheduler linksHealthMonitorAsync;
+    private final LinksHealthMonitorTask linksHealthMonitorAsync;
 
     /**
      * 监听插件配置变更

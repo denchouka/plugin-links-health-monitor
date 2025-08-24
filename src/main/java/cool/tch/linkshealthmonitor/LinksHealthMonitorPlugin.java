@@ -1,6 +1,6 @@
 package cool.tch.linkshealthmonitor;
 
-import cool.tch.linkshealthmonitor.task.LinksHealthMonitorResult;
+import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
 import org.springframework.stereotype.Component;
 import run.halo.app.extension.Scheme;
 import run.halo.app.extension.SchemeManager;
