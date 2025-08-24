@@ -13,7 +13,7 @@ spec:
           id: customizedCronEnable
           label: 启用自定义Cron表达式
           value: false
-          help: 是否自定义监测友链的Cron表达式，6位cron格式包括「秒 分 时 日 月 星期」,默认每天0点监测一次。
+          help: 是否自定义监测友链的Cron表达式,默认每天0点监测一次。
         - $formkit: text
           if: $get(customizedCronEnable).value === true
           name: customizedCron
@@ -21,7 +21,7 @@ spec:
           id: customizedCron
           label: 自定义6位cron表达式
           validation: required
-          placeholder: 请输入自定义6位cron表达式
+          placeholder: 请输入自定义6位cron表达式，6位cron必须遵循「秒 分 时 日 月 星期」的格式
           help: 用于配置监测友链的定时任务的时间表达式，Cron表达式格式有误时使用默认配置。请注意自定义Cron的周期较短时，短期内多次执行任务会给系统带来负担。
         - $formkit: select
           name: notRequierdMonitorlinks
