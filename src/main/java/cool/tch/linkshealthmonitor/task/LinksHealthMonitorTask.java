@@ -2,6 +2,9 @@ package cool.tch.linkshealthmonitor.task;
 
 import cool.tch.linkshealthmonitor.config.LinksHealthMonitorConfig;
 import cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant;
+import cool.tch.linkshealthmonitor.extension.Link;
+import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
+import cool.tch.linkshealthmonitor.service.CustomResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
@@ -35,6 +38,9 @@ public class LinksHealthMonitorTask {
     // 与自定义模型交互
     private final ReactiveExtensionClient client;
 
+    // 操作自定义模型
+    private final CustomResourceService service;
+
     private ScheduledFuture<?> scheduledFuture;
 
     private final TaskScheduler taskScheduler;
@@ -47,8 +53,7 @@ public class LinksHealthMonitorTask {
             .fetch(LinksHealthMonitorConfig.GROUP, LinksHealthMonitorConfig.class)
             .subscribe(this::executeTask, error -> {
                 // 配置获取失败
-                log.error("{}【{}】配置获取并执行任务失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, error.getMessage());
-                error.printStackTrace();
+                log.error("{}【{}】配置获取并执行任务失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, error.getMessage(), error);
             });
     }
 
@@ -69,7 +74,7 @@ public class LinksHealthMonitorTask {
                 executeTaskLogic(config);
             },
             // new CronTrigger(getPractialCron(config))
-            new CronTrigger("0 0/5 * * * ?")
+            new CronTrigger("0 0/3 * * * ?")
         );
     }
 
@@ -115,8 +120,7 @@ public class LinksHealthMonitorTask {
         monitorResult.setResultSpec(resultSpec);
         client.create(monitorResult)
             .doOnError(error -> {
-                log.error("{}【{}】创建自定义模型的对象失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, error.getMessage());
-                error.printStackTrace();
+                log.error("{}【{}】创建自定义模型的对象失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, error.getMessage(), error);
             })
             .subscribe();
     }
@@ -128,6 +132,13 @@ public class LinksHealthMonitorTask {
      */
     private List<LinksHealthMonitorResult.LinkHealthCheckRecord> linkHealthCheck(
         LinksHealthMonitorConfig config) {
+
+        // 查询所有的友链
+        List<Link> allLinks = service.getAllLinks();
+        allLinks.forEach(link -> {
+            System.out.println("友链数据友链数据友链数据友链数据 = " + link.toString());
+        });
+
         List<LinksHealthMonitorResult.LinkHealthCheckRecord> recordList =
             new ArrayList<>();
         // 假的检测记录
