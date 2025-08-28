@@ -8,7 +8,6 @@ import cool.tch.linkshealthmonitor.service.CustomResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 import run.halo.app.extension.Metadata;
 import run.halo.app.extension.ReactiveExtensionClient;
@@ -17,7 +16,6 @@ import run.halo.app.plugin.ReactiveSettingFetcher;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledFuture;
 
 import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LINKS_HEALTH_MONITOR;
 import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LINKS_HEALTH_MONITOR_DESC;
@@ -41,9 +39,10 @@ public class LinksHealthMonitorTask {
     // 操作自定义模型
     private final CustomResourceService service;
 
-    private ScheduledFuture<?> scheduledFuture;
-
     private final TaskScheduler taskScheduler;
+
+    private MonitorableScheduledFuture scheduledFuture;
+
 
     /**
      * 获取插件配置
@@ -62,20 +61,23 @@ public class LinksHealthMonitorTask {
      * @param config 插件配置
      */
     public void executeTask(LinksHealthMonitorConfig config) {
-        // 如果有任务，先取消
+        System.out.println("执行任务执行任务执行任务执行任务执行   cron = " + config.getCustomizedCron());
+
+        // 如果有任务，先停止
         if (scheduledFuture != null) {
-            // 配置变更以后停止新的任务执行，现有的任务也不继续执行
-            scheduledFuture.cancel(true);
+            scheduledFuture.stop();
         }
 
         // 注册新任务
-        scheduledFuture = taskScheduler.schedule(
-            () -> {
-                executeTaskLogic(config);
-            },
-            // new CronTrigger(getPractialCron(config))
-            new CronTrigger("0 0/3 * * * ?")
+        scheduledFuture = new MonitorableScheduledFuture(
+            () -> executeTaskLogic(config),
+            taskScheduler,
+            // getPractialCron(config)
+            "0 0/5 * * * ?"
         );
+
+        // 启动任务
+        scheduledFuture.start();
     }
 
     /**
@@ -83,6 +85,17 @@ public class LinksHealthMonitorTask {
      * @param config 插件配置
      */
     private void executeTaskLogic(LinksHealthMonitorConfig config) {
+        // 获取任务信息
+        MonitorableScheduledFuture.TaskInfo info = scheduledFuture.getTaskInfo();
+        System.out.println("获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息");
+        System.out.println("任务状态: " + info.getTaskStatus());
+        System.out.println("Cron表达式: " + info.getCronExpression());
+        System.out.println("上次执行时间: " + info.getLastStartTime());
+        System.out.println("下次执行时间: " + info.getNextExecutionTime());
+        System.out.println("剩余时间(ms): " + info.getRemainingTimeMillis());
+        System.out.println("自定义cron: " + config.getCustomizedCron());
+        System.out.println("获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息");
+
         // 任务开始
         long start = Instant.now().toEpochMilli();
 
