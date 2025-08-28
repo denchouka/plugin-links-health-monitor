@@ -16,7 +16,7 @@ import run.halo.app.plugin.PluginConfigUpdatedEvent;
 @RequiredArgsConstructor
 public class LinksHealthMonitorListener {
 
-    private final LinksHealthMonitorTask linksHealthMonitorAsync;
+    private final LinksHealthMonitorTask linksHealthMonitorTask;
 
     /**
      * 监听插件配置变更
@@ -25,8 +25,9 @@ public class LinksHealthMonitorListener {
     @EventListener
     public void onConfigUndated(PluginConfigUpdatedEvent event) {
         if (event.getNewConfig().containsKey(LinksHealthMonitorConfig.GROUP)) {
+            System.out.println("监听插件配置变更监听插件配置变更监听插件配置变更监听插件配置变更监听插件配置变更监听插件配置变更");
             // 监听到插件配置变更
-            linksHealthMonitorAsync.getPluginConfig();
+            linksHealthMonitorTask.getPluginConfig();
         }
     }
 
