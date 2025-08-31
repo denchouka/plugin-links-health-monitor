@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import run.halo.app.extension.AbstractExtension;
 import run.halo.app.extension.GVK;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -39,18 +40,6 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         @Schema(defaultValue = "true")
         private Boolean customizedCronAvailable;
 
-        // 实际执行任务的cron
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        private String practicalCron;
-
-        // 执行任务的时间
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        private String monitorDateTime;
-
-        // 执行任务的时长（单位：毫秒）
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        private String monitorDuration;
-
         // 友链监测记录
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private List<LinkHealthCheckRecord> LinkHealthCheckRecordList;
@@ -62,6 +51,7 @@ public class LinksHealthMonitorResult extends AbstractExtension {
     @Data
     public static class LinkHealthCheckRecord {
 
+        // 友链基本信息
         // 检索友链的key(自定义模型Link元数据的name)
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String linkName;
@@ -78,5 +68,37 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String linkLogo;
 
+        // 友链的网站分组(自定义模型的displayName)
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        private String linkGroup;
+
+        // 友链的网站分组(自定义模型的groupName对应的displayName)
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        private String linkGroupDisplayName;
+
+        // 功能监测
+        // 1. 网站是否可以打开
+        private boolean websiteAccessible;
+
+        // 2. 网站logo是否可以访问
+        private boolean logoAccessible;
+
+        // 3. 网站logo是否有变更
+        private boolean logoChanged;
+
+        // 4. 网站名称是否有变更 (displayName)
+        private boolean displayNameChanged;
+
+        // 5. 是否包含本站友链
+        private boolean containsOurLink;
+
+        // 6. 最新更新文章名称
+        private String latestArticleTitle;
+
+        // 7. 最新更新文章url
+        private String latestArticleUrl;
+
+        // 8. 最新更新文章时间
+        private LocalDateTime latestArticleTime;
     }
 }
