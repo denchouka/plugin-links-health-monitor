@@ -85,17 +85,6 @@ public class LinksHealthMonitorTask {
      * @param config 插件配置
      */
     private void executeTaskLogic(LinksHealthMonitorConfig config) {
-        // 获取任务信息
-        MonitorableScheduledFuture.TaskInfo info = scheduledFuture.getTaskInfo();
-        System.out.println("获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息");
-        System.out.println("任务状态: " + info.getTaskStatus());
-        System.out.println("Cron表达式: " + info.getCronExpression());
-        System.out.println("上次执行时间: " + info.getLastStartTime());
-        System.out.println("下次执行时间: " + info.getNextExecutionTime());
-        System.out.println("剩余时间(ms): " + info.getRemainingTimeMillis());
-        System.out.println("自定义cron: " + config.getCustomizedCron());
-        System.out.println("获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息");
-
         // 任务开始
         long start = Instant.now().toEpochMilli();
 
