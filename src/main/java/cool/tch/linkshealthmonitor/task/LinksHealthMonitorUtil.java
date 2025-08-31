@@ -1,5 +1,6 @@
 package cool.tch.linkshealthmonitor.task;
 
+import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
 import org.springframework.scheduling.support.CronExpression;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,4 +42,54 @@ public class LinksHealthMonitorUtil {
         return now.format(formatter);
     }
 
+    /**
+     * 监测网站是否可以打开
+     * @param url 网站url
+     * @param checkRecord 监测记录
+     */
+    public static void isWebsiteAccessible(String url, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    }
+
+    /**
+     * 监测网站logo是否可以访问
+     * @param url 网站url
+     * @param logo 网站logo
+     * @param checkRecord 监测记录
+     */
+    public static void isLogoAccessible(String url, String logo, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    }
+
+    /**
+     * 监测网站logo是否有变更
+     * @param url 网站url
+     * @param logo 网站logo
+     * @param checkRecord 监测记录
+     */
+    public static void isLogoChanged(String url, String logo, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    }
+
+    /**
+     * 网站名称是否有变更
+     * @param url 网站url
+     * @param displayName 网站名称
+     * @param checkRecord 监测记录
+     */
+    public static void isDisplayNameChanged(String url, String displayName, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    }
+
+    /**
+     * 监测是否包含本站友链
+     * @param url 网站url
+     * @param checkRecord 监测记录
+     */
+    public static void isContainsOurLink(String url, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    }
+
+    /**
+     * 最新更新文章名称，url，更新时间
+     * @param url 网站url
+     * @param checkRecord 监测记录
+     */
+    public static void getLatestArticle(String url, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    }
 }
