@@ -13,8 +13,8 @@ import run.halo.app.extension.Metadata;
 import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.plugin.ReactiveSettingFetcher;
 
-import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LINKS_HEALTH_MONITOR;
@@ -73,7 +73,7 @@ public class LinksHealthMonitorTask {
             () -> executeTaskLogic(config),
             taskScheduler,
             // getPractialCron(config)
-            "0 0/5 * * * ?"
+            "0 0/8 * * * ?"
         );
 
         // 启动任务
@@ -85,8 +85,6 @@ public class LinksHealthMonitorTask {
      * @param config 插件配置
      */
     private void executeTaskLogic(LinksHealthMonitorConfig config) {
-        // 任务开始
-        long start = Instant.now().toEpochMilli();
 
         // 自定义模型的对象
         LinksHealthMonitorResult monitorResult = new LinksHealthMonitorResult();
@@ -96,22 +94,11 @@ public class LinksHealthMonitorTask {
         // 自定义cron
         String customizedCron = config.getCustomizedCron();
         resultSpec.setCustomizedCron(customizedCron);
-
         // 自定义Cron是否可用
         resultSpec.setCustomizedCronAvailable(LinksHealthMonitorUtil.checkCronExpression(customizedCron));
-        // 实际执行任务的cron
-        String practicalCron = getPractialCron(config);
-        resultSpec.setPracticalCron(practicalCron);
-        // 执行任务的时间
-        resultSpec.setMonitorDateTime(LinksHealthMonitorUtil.getCurrentDateTime());
 
-        // 友链检测记录
+        // 友链监测记录
         resultSpec.setLinkHealthCheckRecordList(linkHealthCheck(config));
-
-        // 任务结束
-        long end = Instant.now().toEpochMilli();
-        // 执行任务的时长（单位：秒）
-        resultSpec.setMonitorDuration(String.format("%.3f", (end - start) / 1000.0));
 
         // 元数据
         Metadata metadata = new Metadata();
@@ -135,22 +122,55 @@ public class LinksHealthMonitorTask {
     private List<LinksHealthMonitorResult.LinkHealthCheckRecord> linkHealthCheck(
         LinksHealthMonitorConfig config) {
 
-        // 查询所有的友链
-        List<Link> allLinks = service.getAllLinks();
-        allLinks.forEach(link -> {
-            System.out.println("友链数据友链数据友链数据友链数据 = " + link.toString());
-        });
-
+        // 友链监测记录
         List<LinksHealthMonitorResult.LinkHealthCheckRecord> recordList =
             new ArrayList<>();
-        // 假的检测记录
-        LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord =
-            new LinksHealthMonitorResult.LinkHealthCheckRecord();
-        checkRecord.setLinkName("test-link");
-        checkRecord.setLinkUrl("http://localhost:8080");
-        checkRecord.setLinkDisplayName("test-link-name");
-        checkRecord.setLinkLogo("http://localhost:8080/logo.png");
-        recordList.add(checkRecord);
+
+        // 查询所有的友链
+        List<Link> allLinks = service.getAllLinks();
+        // 无需检测友链
+        String[] notRequierdMonitorlinks = config.getNotRequierdMonitorlinks();
+
+        // 友链检测
+        allLinks.forEach(link -> {
+            // 获取友链元数据的name
+            String metaName = link.getMetadata().getName();
+            if (Arrays.stream(notRequierdMonitorlinks).noneMatch(metaName::equals)) {
+
+                // 监测记录
+                LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord = new LinksHealthMonitorResult.LinkHealthCheckRecord();
+
+                // 记录友链基本信息
+                Link.LinkSpec spec = link.getSpec();
+                checkRecord.setLinkName(metaName);
+                String url = spec.getUrl();
+                checkRecord.setLinkUrl(url);
+                String displayName = spec.getDisplayName();
+                checkRecord.setLinkDisplayName(displayName);
+                String logo = spec.getLogo();
+                checkRecord.setLinkLogo(logo);
+                // 分组
+                String groupName = spec.getGroupName();
+                checkRecord.setLinkGroup(groupName);
+                checkRecord.setLinkGroupDisplayName(service.getGroupDisplayNameByName(groupName));
+
+                // 功能监测
+                // 1. 网站是否可以打开
+                LinksHealthMonitorUtil.isWebsiteAccessible(url, checkRecord);
+                // 2. 网站logo是否可以访问
+                LinksHealthMonitorUtil.isLogoAccessible(url, logo, checkRecord);
+                // 3. 网站logo是否有变更
+                LinksHealthMonitorUtil.isLogoChanged(url, logo, checkRecord);
+                // 4. 网站名称是否有变更
+                LinksHealthMonitorUtil.isDisplayNameChanged(url, displayName, checkRecord);
+                // 5. 是否包含本站友链
+                LinksHealthMonitorUtil.isContainsOurLink(url, checkRecord);
+                // 6,7,8. 最新更新文章名称，url，更新时间
+                LinksHealthMonitorUtil.getLatestArticle(url, checkRecord);
+
+                recordList.add(checkRecord);
+            }
+        });
 
         return recordList;
     }
