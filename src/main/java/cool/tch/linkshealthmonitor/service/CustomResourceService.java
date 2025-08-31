@@ -1,6 +1,7 @@
 package cool.tch.linkshealthmonitor.service;
 
 import cool.tch.linkshealthmonitor.extension.Link;
+import cool.tch.linkshealthmonitor.extension.LinkGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -44,9 +45,25 @@ public class CustomResourceService {
                 .collectList()
                 .timeout(Duration.ofSeconds(10))
                 .onErrorResume(error -> {
-                    log.error("{}【{}】配置获取并执行任务失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, error.getMessage(), error);
+                    log.error("{}【{}】获取所有的友链数据失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, error.getMessage(), error);
                     return Mono.just(new ArrayList<>());
                 })
                 .block();
+    }
+
+    /**
+     * 根据分组的groupName获取分组的displayName
+     * @param groupName 分组的groupName
+     * @return 分组的displayName
+     */
+    public String getGroupDisplayNameByName(String groupName) {
+        return client.fetch(LinkGroup.class, groupName)
+            .map(linkGroup -> linkGroup.getSpec().getDisplayName())
+            .timeout(Duration.ofSeconds(10))
+            .onErrorResume(error -> {
+                log.error("{}【{}】获取分组数据失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, error.getMessage(), error);
+                return null;
+            })
+            .block();
     }
 }
