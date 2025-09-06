@@ -43,6 +43,9 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         // 友链监测记录
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private List<LinkHealthCheckRecord> LinkHealthCheckRecordList;
+
+        // 本站外部地址
+        private String externalUrl;
     }
 
     /**

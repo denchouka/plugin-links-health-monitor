@@ -88,6 +88,11 @@ public class LinksHealthMonitorUtil {
      * @return 网站是否包含本站友链
      */
     public static boolean isContainsOurLink(String url, String ourUrl) {
+        // 获取本站外部地址失败
+        if (ourUrl == null || ourUrl.isEmpty()) {
+            return false;
+        }
+
         return false;
     }
 

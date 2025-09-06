@@ -96,9 +96,11 @@ public class LinksHealthMonitorTask {
         resultSpec.setCustomizedCron(customizedCron);
         // 自定义Cron是否可用
         resultSpec.setCustomizedCronAvailable(LinksHealthMonitorUtil.checkCronExpression(customizedCron));
+        // 本站外部地址
+        resultSpec.setExternalUrl(service.getExternalUrl());
 
         // 友链监测记录
-        resultSpec.setLinkHealthCheckRecordList(linkHealthCheck(config));
+        resultSpec.setLinkHealthCheckRecordList(linkHealthCheck(config, resultSpec));
 
         // 元数据
         Metadata metadata = new Metadata();
@@ -117,10 +119,11 @@ public class LinksHealthMonitorTask {
     /**
      * 友链检测
      * @param config 插件配置
+     * @param resultSpec 自定义模型的对象
      * @return 友链检测记录
      */
     private List<LinksHealthMonitorResult.LinkHealthCheckRecord> linkHealthCheck(
-        LinksHealthMonitorConfig config) {
+        LinksHealthMonitorConfig config, LinksHealthMonitorResult.ResultSpec resultSpec) {
 
         // 友链监测记录
         List<LinksHealthMonitorResult.LinkHealthCheckRecord> recordList =
@@ -164,7 +167,7 @@ public class LinksHealthMonitorTask {
                 // 4. 网站名称是否有变更
                 checkRecord.setDisplayNameChanged(LinksHealthMonitorUtil.isDisplayNameChanged(url, displayName));
                 // 5. 网站是否包含本站友链
-                checkRecord.setContainsOurLink(LinksHealthMonitorUtil.isContainsOurLink(url, service.getExternalUrl()));
+                checkRecord.setContainsOurLink(LinksHealthMonitorUtil.isContainsOurLink(url, resultSpec.getExternalUrl()));
                 // 6,7,8. 最新更新文章名称，url，更新时间
                 LinksHealthMonitorUtil.getLatestArticle(url, checkRecord);
 
