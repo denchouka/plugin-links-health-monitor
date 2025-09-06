@@ -44,45 +44,51 @@ public class LinksHealthMonitorUtil {
 
     /**
      * 监测网站是否可以打开
-     * @param url 网站url
-     * @param checkRecord 监测记录
+     * @param url  网站url
+     * @return 网站是否可以打开
      */
-    public static void isWebsiteAccessible(String url, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    public static boolean isWebsiteAccessible(String url) {
+        return false;
     }
 
     /**
      * 监测网站logo是否可以访问
      * @param url 网站url
      * @param logo 网站logo
-     * @param checkRecord 监测记录
+     * @return 网站logo是否可以访问
      */
-    public static void isLogoAccessible(String url, String logo, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    public static boolean isLogoAccessible(String url, String logo) {
+        return false;
     }
 
     /**
      * 监测网站logo是否有变更
      * @param url 网站url
      * @param logo 网站logo
-     * @param checkRecord 监测记录
+     * @return 网站logo是否有变更
      */
-    public static void isLogoChanged(String url, String logo, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    public static boolean isLogoChanged(String url, String logo) {
+        return false;
     }
 
     /**
-     * 网站名称是否有变更
+     * 监测网站名称是否有变更
      * @param url 网站url
      * @param displayName 网站名称
-     * @param checkRecord 监测记录
+     * @return 网站名称是否有变更
      */
-    public static void isDisplayNameChanged(String url, String displayName, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    public static boolean isDisplayNameChanged(String url, String displayName) {
+        return false;
     }
 
     /**
-     * 监测是否包含本站友链
+     * 监测网站是否包含本站友链
      * @param url 网站url
-     * @param checkRecord 监测记录
+     * @param ourUrl 本站外部访问地址
+     * @return 网站是否包含本站友链
      */
-    public static void isContainsOurLink(String url, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    public static boolean isContainsOurLink(String url, String ourUrl) {
+        return false;
     }
 
     /**
