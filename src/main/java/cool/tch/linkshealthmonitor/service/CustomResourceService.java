@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono;
 import run.halo.app.extension.ListOptions;
 import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.extension.router.selector.FieldSelector;
+import run.halo.app.infra.ExternalUrlSupplier;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,9 @@ public class CustomResourceService {
 
     // 与自定义模型交互
     private final ReactiveExtensionClient client;
+
+    // 获取用户配置的 Halo 外部访问地址
+    private final ExternalUrlSupplier externalUrlSupplier;
 
     /**
      * 获取所有的友链数据
@@ -65,5 +69,14 @@ public class CustomResourceService {
                 return null;
             })
             .block();
+    }
+
+    /**
+     * 获取用户配置的 Halo 外部访问地址
+     * @return 用户配置的 Halo 外部访问地址
+     */
+    public String getExternalUrl() {
+        // 外部访问地址可以修改，所以不做保存每次都直接查询
+        return externalUrlSupplier.getRaw().toString();
     }
 }
