@@ -78,27 +78,35 @@ public class LinksHealthMonitorResult extends AbstractExtension {
 
         // 功能监测
         // 1. 网站是否可以打开
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean websiteAccessible;
 
         // 2. 网站logo是否可以访问
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean logoAccessible;
 
         // 3. 网站logo是否有变更
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean logoChanged;
 
         // 4. 网站名称是否有变更 (displayName)
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean displayNameChanged;
 
         // 5. 是否包含本站友链
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean containsOurLink;
 
         // 6. 最新更新文章名称
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String latestArticleTitle;
 
         // 7. 最新更新文章url
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String latestArticleUrl;
 
         // 8. 最新更新文章时间
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private LocalDateTime latestArticleTime;
     }
 }
