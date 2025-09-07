@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.CUSTOM_MODEL_METADATA_NAME_PREFIX;
+import static cool.tch.linkshealthmonitor.constant.Constant.CUSTOM_MODEL_METADATA_NAME_PREFIX;
 
 /**
  * @Author Denchouka

@@ -15,8 +15,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LINKS_HEALTH_MONITOR;
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LINKS_HEALTH_MONITOR_DESC;
+import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR;
+import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
 import static run.halo.app.extension.index.query.QueryFactory.isNull;
 
 /**

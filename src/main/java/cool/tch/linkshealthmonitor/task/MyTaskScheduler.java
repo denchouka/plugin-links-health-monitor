@@ -1,6 +1,6 @@
 package cool.tch.linkshealthmonitor.task;
 
-import cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant;
+import cool.tch.linkshealthmonitor.constant.Constant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -17,11 +17,11 @@ public class MyTaskScheduler {
     @Bean
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(LinksHealthMonitorConstant.CUSTOM_THREAD_POOL_SIZE);
-        scheduler.setThreadNamePrefix(LinksHealthMonitorConstant.CUSTOM_MODEL_METADATA_NAME_PREFIX);
+        scheduler.setPoolSize(Constant.CUSTOM_THREAD_POOL_SIZE);
+        scheduler.setThreadNamePrefix(Constant.CUSTOM_MODEL_METADATA_NAME_PREFIX);
         // 服务关闭时,等待所有正在执行的任务完成
         scheduler.setWaitForTasksToCompleteOnShutdown(true);
-        scheduler.setAwaitTerminationSeconds(LinksHealthMonitorConstant.CUSTOM_THREAD_AWAIT_TIME);
+        scheduler.setAwaitTerminationSeconds(Constant.CUSTOM_THREAD_AWAIT_TIME);
         //取消的任务立即从队列中移除，避免资源占用
         scheduler.setRemoveOnCancelPolicy(true);
         scheduler.initialize();

@@ -1,7 +1,7 @@
 package cool.tch.linkshealthmonitor.task;
 
 import cool.tch.linkshealthmonitor.config.LinksHealthMonitorConfig;
-import cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant;
+import cool.tch.linkshealthmonitor.constant.Constant;
 import cool.tch.linkshealthmonitor.extension.Link;
 import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
 import cool.tch.linkshealthmonitor.service.CustomResourceService;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LINKS_HEALTH_MONITOR;
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LINKS_HEALTH_MONITOR_DESC;
+import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR;
+import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
 
 /**
  * @Author Denchouka
@@ -190,6 +190,6 @@ public class LinksHealthMonitorTask {
            return customizedCron;
         }
 
-        return LinksHealthMonitorConstant.DEFAULT_CRON;
+        return Constant.DEFAULT_CRON;
     }
 }

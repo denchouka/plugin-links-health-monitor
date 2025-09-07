@@ -5,7 +5,7 @@ package cool.tch.linkshealthmonitor.constant;
  * @Date 2025/8/10 22:29
  * @Desc 常量
  */
-public class LinksHealthMonitorConstant {
+public class Constant {
 
     public static final String LINKS_HEALTH_MONITOR = "Links Health Monitor";
 

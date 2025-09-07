@@ -15,12 +15,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.DEFAULT_SHORTEST_TIME;
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.DEFAULT_ZONE_ID;
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LINKS_HEALTH_MONITOR;
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LINKS_HEALTH_MONITOR_DESC;
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.LOCAL_DATE_TIME_OUTPUT_FORMATTER;
-import static cool.tch.linkshealthmonitor.constant.LinksHealthMonitorConstant.NEXT_TASK_TIME_PAST;
+import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_SHORTEST_TIME;
+import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_ZONE_ID;
+import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR;
+import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
+import static cool.tch.linkshealthmonitor.constant.Constant.LOCAL_DATE_TIME_OUTPUT_FORMATTER;
+import static cool.tch.linkshealthmonitor.constant.Constant.NEXT_TASK_TIME_PAST;
 
 /**
  * @Author Denchouka
