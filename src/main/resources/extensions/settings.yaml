@@ -22,13 +22,13 @@ spec:
           label: 自定义6位cron表达式
           validation: required
           placeholder: 请输入自定义6位cron表达式，6位cron必须遵循「秒 分 时 日 月 星期」的格式
-          help: 用于配置监测友链的定时任务的时间表达式，Cron表达式格式有误时使用默认配置。请注意自定义Cron的周期较短时，短期内多次执行任务会给系统带来负担。
+          help: 用于配置监测友链的定时任务的时间表达式，Cron表达式格式有误时使用默认配置。
         - $formkit: select
           name: notRequierdMonitorlinks
           key: notRequierdMonitorlinks
           id: notRequierdMonitorlinks
           label: 无需监测友链
-          placeholder: 请选择不需要监测的友链
+          placeholder: 请选择不需要监测的友链。
           multiple: true
           searchable: true
           action: /apis/api.plugin.halo.run/v1alpha1/plugins/PluginLinks/links
@@ -43,3 +43,17 @@ spec:
             fieldSelectorKey: spec.displayName
           validation: required
           help: 请选择不需要监测的友链
+        - $formkit: group
+          name: topsText
+          label: 提示
+          children:
+            - $el: div
+              attrs:
+                class: "formkit-help text-xs mt-2 text-gray-500 flex items-center mb-1 cursor-pointer"
+                innerHTML: "
+                          1.请注意自定义Cron的间隔周期较短时，短期内多次执行任务会给系统带来负担。
+                          <br>
+                          2.定时任务默认时区 Asia/Shanghai。
+                          <br>
+                          3.友链监测时本站地址取自概览-外部访问地址，请确保已设置过外部访问地址。
+                          "
