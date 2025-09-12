@@ -102,5 +102,8 @@ public class LinksHealthMonitorUtil {
      * @param checkRecord 监测记录
      */
     public static void getLatestArticle(String url, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+        checkRecord.setLatestArticleTitle("测试文章名称");
+        checkRecord.setLatestArticleUrl("测试文章url");
+        checkRecord.setLatestArticleTime(getCurrentDateTime());
     }
 }

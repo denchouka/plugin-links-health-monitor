@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import run.halo.app.extension.AbstractExtension;
 import run.halo.app.extension.GVK;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -41,7 +40,6 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         private Boolean customizedCronAvailable;
 
         // 友链监测记录
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private List<LinkHealthCheckRecord> LinkHealthCheckRecordList;
 
         // 本站外部地址
@@ -56,60 +54,46 @@ public class LinksHealthMonitorResult extends AbstractExtension {
 
         // 友链基本信息
         // 检索友链的key(自定义模型Link元数据的name)
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String linkName;
 
         // 友链的url(自定义模型的url)
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String linkUrl;
 
         // 友链的网站名称(自定义模型的displayName)
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String linkDisplayName;
 
         // 友链的网站logo(自定义模型的logo)
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String linkLogo;
 
         // 友链的网站分组(自定义模型的displayName)
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String linkGroup;
 
         // 友链的网站分组(自定义模型的groupName对应的displayName)
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String linkGroupDisplayName;
 
         // 功能监测
         // 1. 网站是否可以打开
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean websiteAccessible;
 
         // 2. 网站logo是否可以访问
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean logoAccessible;
 
         // 3. 网站logo是否有变更
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean logoChanged;
 
         // 4. 网站名称是否有变更 (displayName)
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean displayNameChanged;
 
         // 5. 是否包含本站友链
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private boolean containsOurLink;
 
         // 6. 最新更新文章名称
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String latestArticleTitle;
 
         // 7. 最新更新文章url
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String latestArticleUrl;
 
         // 8. 最新更新文章时间
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        private LocalDateTime latestArticleTime;
+        private String latestArticleTime;
     }
 }
