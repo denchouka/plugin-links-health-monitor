@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@GVK(kind = "Result",
+@GVK(kind = "MonitorResult",
     group = "result.linkshealthmonitor.tch.cool",
     version = "v1alpha1",
     singular = "result",
@@ -78,22 +78,19 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         // 2. 网站logo是否可以访问
         private boolean logoAccessible;
 
-        // 3. 网站logo是否有变更
-        private boolean logoChanged;
-
-        // 4. 网站名称是否有变更 (displayName)
+        // 3. 网站名称是否有变更 (displayName)
         private boolean displayNameChanged;
 
-        // 5. 是否包含本站友链
+        //4. 是否包含本站友链
         private boolean containsOurLink;
 
-        // 6. 最新更新文章名称
+        // 5. 最新更新文章名称
         private String latestArticleTitle;
 
-        // 7. 最新更新文章url
+        // 6. 最新更新文章url
         private String latestArticleUrl;
 
-        // 8. 最新更新文章时间
+        // 7. 最新更新文章时间
         private String latestArticleTime;
     }
 }
