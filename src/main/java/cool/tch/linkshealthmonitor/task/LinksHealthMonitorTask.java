@@ -73,7 +73,7 @@ public class LinksHealthMonitorTask {
             () -> executeTaskLogic(config),
             taskScheduler,
             // getPractialCron(config)
-            "0 0/5 * * * ?"
+            "0 0/3 * * * ?"
         );
 
         // 启动任务
@@ -159,16 +159,14 @@ public class LinksHealthMonitorTask {
 
                 // 功能监测
                 // 1. 网站是否可以打开
-                checkRecord.setWebsiteAccessible(LinksHealthMonitorUtil.isWebsiteAccessible(url));
+                checkRecord.setWebsiteAccessible(LinksHealthMonitorUtil.isUrlAccessible(url));
                 // 2. 网站logo是否可以访问
-                checkRecord.setLogoAccessible(LinksHealthMonitorUtil.isLogoAccessible(url, logo));
-                // 3. 网站logo是否有变更
-                checkRecord.setLogoChanged(LinksHealthMonitorUtil.isLogoChanged(url, logo));
-                // 4. 网站名称是否有变更
+                checkRecord.setLogoAccessible(LinksHealthMonitorUtil.isUrlAccessible(logo));
+                // 3. 网站名称是否有变更
                 checkRecord.setDisplayNameChanged(LinksHealthMonitorUtil.isDisplayNameChanged(url, displayName));
-                // 5. 网站是否包含本站友链
+                // 4. 网站是否包含本站友链
                 checkRecord.setContainsOurLink(LinksHealthMonitorUtil.isContainsOurLink(url, resultSpec.getExternalUrl()));
-                // 6,7,8. 最新更新文章名称，url，更新时间
+                // 5,6,7. 最新更新文章名称，url，更新时间
                 LinksHealthMonitorUtil.getLatestArticle(url, checkRecord);
 
                 recordList.add(checkRecord);

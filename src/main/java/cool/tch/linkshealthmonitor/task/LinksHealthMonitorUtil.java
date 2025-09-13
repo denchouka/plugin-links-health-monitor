@@ -2,11 +2,16 @@ package cool.tch.linkshealthmonitor.task;
 
 import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
 import org.springframework.scheduling.support.CronExpression;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import static cool.tch.linkshealthmonitor.constant.Constant.CUSTOM_MODEL_METADATA_NAME_PREFIX;
+import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_REQUEST_METHOD_GET;
+import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_TIMEOUT_MS;
+import static cool.tch.linkshealthmonitor.constant.Constant.LOCAL_DATE_TIME_OUTPUT_FORMATTER;
 
 /**
  * @Author Denchouka
@@ -37,38 +42,27 @@ public class LinksHealthMonitorUtil {
      * @return 带时区信息的当前时间
      */
     public static String getCurrentDateTime() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_OUTPUT_FORMATTER);
         ZonedDateTime now = ZonedDateTime.now();
         return now.format(formatter);
     }
 
     /**
-     * 监测网站是否可以打开
-     * @param url  网站url
-     * @return 网站是否可以打开
+     * 监测url是否可以访问
+     * @param url url
+     * @return url是否可以访问
      */
-    public static boolean isWebsiteAccessible(String url) {
-        return false;
-    }
+    public static boolean isUrlAccessible(String url) {
 
-    /**
-     * 监测网站logo是否可以访问
-     * @param url 网站url
-     * @param logo 网站logo
-     * @return 网站logo是否可以访问
-     */
-    public static boolean isLogoAccessible(String url, String logo) {
-        return false;
-    }
-
-    /**
-     * 监测网站logo是否有变更
-     * @param url 网站url
-     * @param logo 网站logo
-     * @return 网站logo是否有变更
-     */
-    public static boolean isLogoChanged(String url, String logo) {
-        return false;
+        try{
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod(HTTP_REQUEST_METHOD_GET);
+            connection.setConnectTimeout(HTTP_TIMEOUT_MS);
+            connection.setReadTimeout(HTTP_TIMEOUT_MS);
+            return connection.getResponseCode() == HttpURLConnection.HTTP_OK;
+        } catch (Exception error) {
+            return false;
+        }
     }
 
     /**
