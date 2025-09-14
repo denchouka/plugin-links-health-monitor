@@ -4,8 +4,6 @@ import cool.tch.linkshealthmonitor.config.LinksHealthMonitorConfig;
 import cool.tch.linkshealthmonitor.task.LinksHealthMonitorUtils;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_FRIEND_LINK_ROUTES;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.Mockito.mock;
