@@ -15,4 +15,7 @@ public class LinksHealthMonitorConfig {
 
     // 无需监测友链
     private String[] notRequierdMonitorlinks;
+
+    // 友链页面路由
+    private String[] friendLinkRoutes;
 }

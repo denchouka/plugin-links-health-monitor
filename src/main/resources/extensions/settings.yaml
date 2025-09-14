@@ -43,6 +43,21 @@ spec:
             fieldSelectorKey: spec.displayName
           validation: required
           help: 请选择不需要监测的友链
+        - $formkit: list
+          name: friendLinkRoutes
+          key: friendLinkRoutes
+          id: friendLinkRoutes
+          label: 友链页面路由
+          addLabel: 添加路由
+          min: 0
+          max: 10
+          itemType: string
+          help: 友链网站的友链页面路由，默认路由不足时添加。
+          children:
+            - $formkit: text
+              index: "$index"
+              validation: required
+              placeholder: 要添加的友链页面路由，如/links
         - $formkit: group
           name: topsText
           label: 提示
@@ -56,4 +71,12 @@ spec:
                           2.定时任务默认时区 Asia/Shanghai。
                           <br>
                           3.友链监测时本站地址取自概览-外部访问地址，请确保已设置过外部访问地址。
+                          <br>
+                          4.默认友链网站的友链页面路由如下，用于监测友链网站是否添加本站友链。
+                          <br>
+                          /links
+                          <br>
+                          /link
+                          <br>
+                          /friends
                           "
