@@ -25,7 +25,6 @@ public class LinksHealthMonitorListener {
     @EventListener
     public void onConfigUndated(PluginConfigUpdatedEvent event) {
         if (event.getNewConfig().containsKey(LinksHealthMonitorConfig.GROUP)) {
-            System.out.println("监听插件配置变更监听插件配置变更监听插件配置变更监听插件配置变更监听插件配置变更监听插件配置变更");
             // 监听到插件配置变更
             linksHealthMonitorTask.getPluginConfig();
         }
