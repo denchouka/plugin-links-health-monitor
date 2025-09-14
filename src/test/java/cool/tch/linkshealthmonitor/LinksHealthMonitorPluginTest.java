@@ -1,6 +1,5 @@
 package cool.tch.linkshealthmonitor;
 
-import cool.tch.linkshealthmonitor.task.LinksHealthMonitorUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
