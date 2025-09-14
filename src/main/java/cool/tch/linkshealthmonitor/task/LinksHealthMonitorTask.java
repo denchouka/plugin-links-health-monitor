@@ -95,7 +95,7 @@ public class LinksHealthMonitorTask {
         String customizedCron = config.getCustomizedCron();
         resultSpec.setCustomizedCron(customizedCron);
         // 自定义Cron是否可用
-        resultSpec.setCustomizedCronAvailable(LinksHealthMonitorUtil.checkCronExpression(customizedCron));
+        resultSpec.setCustomizedCronAvailable(LinksHealthMonitorUtils.checkCronExpression(customizedCron));
         // 本站外部地址
         resultSpec.setExternalUrl(service.getExternalUrl());
 
@@ -104,7 +104,7 @@ public class LinksHealthMonitorTask {
 
         // 元数据
         Metadata metadata = new Metadata();
-        metadata.setName(LinksHealthMonitorUtil.generateMetadataname());
+        metadata.setName(LinksHealthMonitorUtils.generateMetadataname());
         monitorResult.setMetadata(metadata);
 
         // 创建自定义模型的对象
@@ -135,7 +135,7 @@ public class LinksHealthMonitorTask {
         String[] notRequierdMonitorlinks = config.getNotRequierdMonitorlinks();
 
         // 获取全部的友链页面路由
-        String[] allFriendLinkRoutes = LinksHealthMonitorUtil.getAllFriendLinkRoutes(config);
+        String[] allFriendLinkRoutes = LinksHealthMonitorUtils.getAllFriendLinkRoutes(config);
 
         // 友链检测
         allLinks.forEach(link -> {
@@ -162,15 +162,15 @@ public class LinksHealthMonitorTask {
 
                 // 功能监测
                 // 1. 网站是否可以打开
-                checkRecord.setWebsiteAccessible(LinksHealthMonitorUtil.isUrlAccessible(url));
+                checkRecord.setWebsiteAccessible(LinksHealthMonitorUtils.isUrlAccessible(url));
                 // 2. 网站logo是否可以访问
-                checkRecord.setLogoAccessible(LinksHealthMonitorUtil.isUrlAccessible(logo));
+                checkRecord.setLogoAccessible(LinksHealthMonitorUtils.isUrlAccessible(logo));
                 // 3. 网站名称是否有变更
-                checkRecord.setDisplayNameChanged(LinksHealthMonitorUtil.isDisplayNameChanged(url, displayName));
+                checkRecord.setDisplayNameChanged(LinksHealthMonitorUtils.isDisplayNameChanged(url, displayName));
                 // 4. 网站是否包含本站友链
-                checkRecord.setContainsOurLink(LinksHealthMonitorUtil.isContainsOurLink(url, resultSpec.getExternalUrl()));
+                checkRecord.setContainsOurLink(LinksHealthMonitorUtils.isContainsOurLink(url, resultSpec.getExternalUrl()));
                 // 5,6,7. 最新更新文章名称，url，更新时间
-                LinksHealthMonitorUtil.getLatestArticle(url, checkRecord);
+                LinksHealthMonitorUtils.getLatestArticle(url, checkRecord);
 
                 recordList.add(checkRecord);
             }
@@ -187,7 +187,7 @@ public class LinksHealthMonitorTask {
     private String getPractialCron(LinksHealthMonitorConfig config) {
         // 启用自定义cron,并且自定义cron表达式可用时
         String customizedCron = config.getCustomizedCron();
-        if (config.isCustomizedCronEnable() && LinksHealthMonitorUtil.checkCronExpression(customizedCron)) {
+        if (config.isCustomizedCronEnable() && LinksHealthMonitorUtils.checkCronExpression(customizedCron)) {
            return customizedCron;
         }
 

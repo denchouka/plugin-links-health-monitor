@@ -22,7 +22,7 @@ import static cool.tch.linkshealthmonitor.constant.Constant.LOCAL_DATE_TIME_OUTP
  * @Date 2025/8/21 21:41
  * @Desc 友链监测的一些功能方法
  */
-public class LinksHealthMonitorUtil {
+public class LinksHealthMonitorUtils {
 
     /**
      * 检查cron表达式
@@ -62,11 +62,11 @@ public class LinksHealthMonitorUtil {
 
         Stream<String> friendLinkRoutesStream = (friendLinkRoutes == null || friendLinkRoutes.length == 0) ? Stream.empty()
             : Arrays.stream(friendLinkRoutes)
-                .map(LinksHealthMonitorUtil::routeInitProcessing)
+                .map(LinksHealthMonitorUtils::routeInitProcessing)
                 // 初始化处理后先去重
                 .distinct()
-                .filter(LinksHealthMonitorUtil::isValidAndNonRootRoute)
-                .map(LinksHealthMonitorUtil::normalizeRoute)
+                .filter(LinksHealthMonitorUtils::isValidAndNonRootRoute)
+                .map(LinksHealthMonitorUtils::normalizeRoute)
                 // 再次判空（防御）
                 .filter(route -> !route.isEmpty())
                 // 去重
