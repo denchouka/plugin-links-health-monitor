@@ -73,7 +73,7 @@ public class LinksHealthMonitorTask {
             () -> executeTaskLogic(config),
             taskScheduler,
             // getPractialCron(config)
-            "0 0/3 * * * ?"
+            "0 0/1 * * * ?"
         );
 
         // 启动任务
@@ -133,6 +133,9 @@ public class LinksHealthMonitorTask {
         List<Link> allLinks = service.getAllLinks();
         // 无需检测友链
         String[] notRequierdMonitorlinks = config.getNotRequierdMonitorlinks();
+
+        // 获取全部的友链页面路由
+        String[] allFriendLinkRoutes = LinksHealthMonitorUtil.getAllFriendLinkRoutes(config);
 
         // 友链检测
         allLinks.forEach(link -> {

@@ -1,14 +1,18 @@
 package cool.tch.linkshealthmonitor.task;
 
+import cool.tch.linkshealthmonitor.config.LinksHealthMonitorConfig;
 import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
 import org.springframework.scheduling.support.CronExpression;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static cool.tch.linkshealthmonitor.constant.Constant.CUSTOM_MODEL_METADATA_NAME_PREFIX;
+import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_FRIEND_LINK_ROUTES;
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_REQUEST_METHOD_GET;
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_TIMEOUT_MS;
 import static cool.tch.linkshealthmonitor.constant.Constant.LOCAL_DATE_TIME_OUTPUT_FORMATTER;
@@ -45,6 +49,94 @@ public class LinksHealthMonitorUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_OUTPUT_FORMATTER);
         ZonedDateTime now = ZonedDateTime.now();
         return now.format(formatter);
+    }
+
+    /**
+     * 获取全部的友链页面路由
+     * @param config 插件配置
+     * @return 全部的友链页面路由，默认路由在前
+     */
+    public static String[] getAllFriendLinkRoutes(LinksHealthMonitorConfig config) {
+        // 插件设置页面添加的路由
+        String[] friendLinkRoutes = config.getFriendLinkRoutes();
+
+        Stream<String> friendLinkRoutesStream = (friendLinkRoutes == null || friendLinkRoutes.length == 0) ? Stream.empty()
+            : Arrays.stream(friendLinkRoutes)
+                .map(LinksHealthMonitorUtil::routeInitProcessing)
+                // 初始化处理后先去重
+                .distinct()
+                .filter(LinksHealthMonitorUtil::isValidAndNonRootRoute)
+                .map(LinksHealthMonitorUtil::normalizeRoute)
+                // 再次判空（防御）
+                .filter(route -> !route.isEmpty())
+                // 去重
+                .distinct();
+
+        // 默认的友链页面路由
+        Stream<String> defaultFriendLinkRoutesStream = Arrays.stream(DEFAULT_FRIEND_LINK_ROUTES);
+
+        // 默认的友链页面路由在前
+        return Stream.concat(defaultFriendLinkRoutesStream, friendLinkRoutesStream)
+            // 结果继续去重
+            .distinct()
+            .toArray(String[]::new);
+    }
+
+    /**
+     * 初始化处理页面路由
+     * @param route 页面路由
+     * @return 初始化处理后的页面路由
+     */
+    private static String routeInitProcessing(String route) {
+        // null -> ""
+        if (route == null ) route = "";
+
+        // 去空格
+        route = route.trim();
+
+        // 先把所有的"\"转换成"/"，后续所有逻辑都基于"/"处理
+        route = route.replace("\\", "/");
+
+        // 连续多个"/"替换成一个
+        route = route.replaceAll("/+", "/");
+
+        return route;
+    }
+
+    /**
+     * 判断是否为有效且非根路径的路由
+     * @param route 页面路由
+     * @return 路由是否可用
+     */
+    private static boolean isValidAndNonRootRoute(String route) {
+        // 是否为空
+        if (route.isEmpty()) return false;
+
+        // 是否为根路径（包括 "///", " / ", 等变体）
+        if (route.chars().allMatch(ch -> ch == '/' || Character.isWhitespace(ch))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 标准化路由格式
+     * @param route 页面路由
+     * @return 标准化后的页面路由
+     */
+    private static String normalizeRoute(String route) {
+        // 必须以"/"开头
+        if (!route.startsWith("/")) {
+            route = "/" + route;
+        }
+
+        // 不能以"/"结尾
+        if (route.length() > 1 && route.endsWith("/")) {
+            route = route.substring(0, route.length() - 1);
+        }
+
+        return route;
     }
 
     /**
