@@ -14,7 +14,7 @@ public class LinksHealthMonitorConfig {
     private String customizedCron;
 
     // 无需监测友链
-    private String[] notRequierdMonitorlinks;
+    private String[] notRequiredMonitorLinks;
 
     // 友链页面路由
     private String[] friendLinkRoutes;
