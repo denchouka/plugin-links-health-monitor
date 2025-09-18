@@ -194,9 +194,7 @@ public class LinksHealthMonitorTask {
                 // 网站名称是否有变更
                 LinksHealthMonitorUtils.isDisplayNameChanged(url, displayName, checkRecord);
                 // 网站是否包含本站友链
-                LinksHealthMonitorUtils.isContainsOurLink(url, resultSpec.getExternalUrl(), allFriendLinkRoutes, checkRecord);
-                // 最新更新文章名称，url，更新时间
-                LinksHealthMonitorUtils.getLatestArticle(url, checkRecord);
+                LinksHealthMonitorUtils.isContainsOurLink(url, LinksHealthMonitorUtils.normalizeUrl(resultSpec.getExternalUrl()), allFriendLinkRoutes, checkRecord);
 
                 recordList.add(checkRecord);
             }

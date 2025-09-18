@@ -89,14 +89,5 @@ public class LinksHealthMonitorResult extends AbstractExtension {
 
         // 是否包含本站友链
         private boolean containsOurLink;
-
-        // 最新更新文章名称
-        private String latestArticleTitle;
-
-        // 最新更新文章url
-        private String latestArticleUrl;
-
-        // 最新更新文章时间
-        private String latestArticleTime;
     }
 }
