@@ -2,9 +2,15 @@ package cool.tch.linkshealthmonitor.task;
 
 import cool.tch.linkshealthmonitor.config.LinksHealthMonitorConfig;
 import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.scheduling.support.CronExpression;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -14,14 +20,19 @@ import java.util.stream.Stream;
 import static cool.tch.linkshealthmonitor.constant.Constant.CUSTOM_MODEL_METADATA_NAME_PREFIX;
 import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_FRIEND_LINK_ROUTES;
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_REQUEST_METHOD_GET;
+import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_REQUEST_USER_AGENT;
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_TIMEOUT_MS;
+import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR;
+import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
 import static cool.tch.linkshealthmonitor.constant.Constant.LOCAL_DATE_TIME_OUTPUT_FORMATTER;
+import static cool.tch.linkshealthmonitor.constant.Constant.PATH_SEPARATOR;
 
 /**
  * @Author Denchouka
  * @Date 2025/8/21 21:41
  * @Desc 友链监测的一些功能方法
  */
+@Slf4j
 public class LinksHealthMonitorUtils {
 
     /**
@@ -89,16 +100,16 @@ public class LinksHealthMonitorUtils {
      */
     private static String routeInitProcessing(String route) {
         // null -> ""
-        if (route == null ) route = "";
+        if (StringUtils.isBlank(route)) route = "";
 
         // 去空格
         route = route.trim();
 
         // 先把所有的"\"转换成"/"，后续所有逻辑都基于"/"处理
-        route = route.replace("\\", "/");
+        route = route.replace("\\", PATH_SEPARATOR);
 
         // 连续多个"/"替换成一个
-        route = route.replaceAll("/+", "/");
+        route = route.replaceAll("/+", PATH_SEPARATOR);
 
         return route;
     }
@@ -110,9 +121,10 @@ public class LinksHealthMonitorUtils {
      */
     private static boolean isValidAndNonRootRoute(String route) {
         // 是否为空
-        if (route.isEmpty()) return false;
+        if (StringUtils.isBlank(route)) return false;
 
         // 是否为根路径（包括 "///", " / ", 等变体）
+        // isWhitespace能识别空白字符，包括空格、制表符('\t')、换行符('\n')、回车('\r')等等
         if (route.chars().allMatch(ch -> ch == '/' || Character.isWhitespace(ch))) {
             return false;
         }
@@ -127,12 +139,12 @@ public class LinksHealthMonitorUtils {
      */
     private static String normalizeRoute(String route) {
         // 必须以"/"开头
-        if (!route.startsWith("/")) {
-            route = "/" + route;
+        if (!route.startsWith(PATH_SEPARATOR)) {
+            route = PATH_SEPARATOR + route;
         }
 
         // 不能以"/"结尾
-        if (route.length() > 1 && route.endsWith("/")) {
+        if (route.length() > 1 && route.endsWith(PATH_SEPARATOR)) {
             route = route.substring(0, route.length() - 1);
         }
 
@@ -147,39 +159,108 @@ public class LinksHealthMonitorUtils {
     public static boolean isUrlAccessible(String url) {
 
         try{
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
             connection.setRequestMethod(HTTP_REQUEST_METHOD_GET);
             connection.setConnectTimeout(HTTP_TIMEOUT_MS);
             connection.setReadTimeout(HTTP_TIMEOUT_MS);
+            connection.setRequestProperty("User-Agent", HTTP_REQUEST_USER_AGENT);
             return connection.getResponseCode() == HttpURLConnection.HTTP_OK;
-        } catch (Exception error) {
+        } catch (Exception e) {
             return false;
         }
     }
 
     /**
      * 监测网站名称是否有变更
+     *
      * @param url 网站url
      * @param displayName 网站名称
-     * @return 网站名称是否有变更
+     * @param checkRecord 监测记录
      */
-    public static boolean isDisplayNameChanged(String url, String displayName) {
-        return false;
+    public static void isDisplayNameChanged(String url, String displayName, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+
+        try{
+            Document document = Jsoup
+                .connect(url)
+                .timeout(HTTP_TIMEOUT_MS)
+                .userAgent(HTTP_REQUEST_USER_AGENT)
+                .get();
+            String title = document.title();
+            checkRecord.setDisplayNameChanged(displayName.equals(title));
+            // 当网站名称没变时新的名称不在网页显示
+            checkRecord.setLatestDisplayName(title);
+        } catch(Exception e) {
+            checkRecord.setDisplayNameChanged(false);
+        }
+
     }
 
     /**
      * 监测网站是否包含本站友链
+     *
      * @param url 网站url
      * @param ourUrl 本站外部访问地址
-     * @return 网站是否包含本站友链
+     * @param allFriendLinkRoutes 全部的友链页面路由
+     * @param checkRecord 监测记录
      */
-    public static boolean isContainsOurLink(String url, String ourUrl) {
+    public static void isContainsOurLink(String url, String ourUrl, String[] allFriendLinkRoutes, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
         // 获取本站外部地址失败
-        if (ourUrl == null || ourUrl.isEmpty()) {
-            return false;
+        if (StringUtils.isBlank(ourUrl)) {
+            return;
         }
 
-        return false;
+        // 是否可以获取友链页面路由（默认不可以）
+        boolean getFriendLinkRoute = false;
+        // 完整的友链页面url
+        String friendLinkUrl = null;
+
+        // 遍历全部的友链页面路由
+        for (String route : allFriendLinkRoutes) {
+            // 拼接完整url，并检查是否可以访问
+            String wholeUrl = StringUtils.join(url, route);
+            if (isUrlAccessible(wholeUrl)) {
+                getFriendLinkRoute = true;
+                friendLinkUrl = wholeUrl;
+                break;
+            }
+        }
+        checkRecord.setGetFriendLinkRoute(getFriendLinkRoute);
+
+        // 获取不到友链页面路由时直接结束
+        if (!getFriendLinkRoute) {
+            return;
+        }
+
+        // 是否包含本站友链
+        try{
+            Document document = Jsoup
+                .connect(friendLinkUrl)
+                .timeout(HTTP_TIMEOUT_MS)
+                .userAgent(HTTP_REQUEST_USER_AGENT)
+                .get();
+
+            // <a>标签
+            Elements hrefLinks = document.select("a[href]");
+            for (Element link : hrefLinks) {
+                if (link.attr("abs:href").equals(ourUrl)) {
+                    checkRecord.setContainsOurLink(true);
+                    break;
+                }
+            }
+
+            // <input>标签
+            if (!checkRecord.isContainsOurLink()) {
+                Elements selectLinks = document.select("input[type=submit]");
+                for (Element link : selectLinks) {
+                    if (link.val().equals(ourUrl)) {
+                        checkRecord.setContainsOurLink(true);
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("{}【{}】访问友链页面失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, friendLinkUrl);
+        }
     }
 
     /**
@@ -191,5 +272,39 @@ public class LinksHealthMonitorUtils {
         checkRecord.setLatestArticleTitle("测试文章名称");
         checkRecord.setLatestArticleUrl("测试文章url");
         checkRecord.setLatestArticleTime(getCurrentDateTime());
+    }
+
+    /**
+     * 标准化url
+     * @param url
+     * @return
+     */
+    public static String normalizeUrl(String url) {
+
+        // 空
+        if (StringUtils.isBlank(url)) {
+            return url;
+        }
+
+        // 把所有的"\"转换成"/"，后续所有逻辑都基于"/"处理
+        url = url.replace("\\", PATH_SEPARATOR);
+
+        // 连续多个"/"替换成一个
+        url = url.replaceAll("/+", PATH_SEPARATOR);
+
+        // https:/ -> https://
+        url = url.replace("https:/", "https://");
+
+        // 删除末尾"/"
+        if (url.length() > 1 && url.endsWith(PATH_SEPARATOR)) {
+            url = url.substring(0, url.length() - 1);
+        }
+
+        // 如果是根路径"/"时转成""，后续会有空的判断
+        if (PATH_SEPARATOR.equals(url)) {
+            url = "";
+        }
+
+        return url;
     }
 }

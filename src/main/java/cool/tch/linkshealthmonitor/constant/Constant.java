@@ -35,4 +35,19 @@ public class Constant {
 
     // LocalDateTime类型数据输出的格式
     public static final String LOCAL_DATE_TIME_OUTPUT_FORMATTER = "yyyy年MM月dd日 HH时mm分ss秒";
+
+    // 网络连接超时（毫秒）
+    public static final int HTTP_TIMEOUT_MS = 10000;
+
+    // 网络请求方法 GET
+    public static final String HTTP_REQUEST_METHOD_GET = "GET";
+
+    // 网络请求User-Agent
+    public static final String HTTP_REQUEST_USER_AGENT = "Mozilla/5.0 (compatible; FriendLinkHealth-Monitor/1.0)";
+
+    // 默认的友链页面路由
+    public static final String[] DEFAULT_FRIEND_LINK_ROUTES = {"/links", "/link", "/friends"};
+
+    // 路径分隔符
+    public static final String PATH_SEPARATOR = "/";
 }

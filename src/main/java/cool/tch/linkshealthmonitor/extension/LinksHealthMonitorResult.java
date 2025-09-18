@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @Author Denchouka
  * @Date 2025/8/21 20:49
- * @Desc 友链检测结果
+ * @Desc 友链监测结果
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -72,25 +72,31 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         private String linkGroupDisplayName;
 
         // 功能监测
-        // 1. 网站是否可以打开
+        // 网站是否可以打开
         private boolean websiteAccessible;
 
-        // 2. 网站logo是否可以访问
+        // 网站logo是否可以访问
         private boolean logoAccessible;
 
-        // 3. 网站名称是否有变更 (displayName)
+        // 网站名称是否有变更 (displayName)
         private boolean displayNameChanged;
 
-        //4. 是否包含本站友链
+        // 网站的最新名称（有变更的情况下）
+        private String latestDisplayName;
+
+        // 是否可以获取友链页面路由
+        private boolean getFriendLinkRoute;
+
+        // 是否包含本站友链
         private boolean containsOurLink;
 
-        // 5. 最新更新文章名称
+        // 最新更新文章名称
         private String latestArticleTitle;
 
-        // 6. 最新更新文章url
+        // 最新更新文章url
         private String latestArticleUrl;
 
-        // 7. 最新更新文章时间
+        // 最新更新文章时间
         private String latestArticleTime;
     }
 }

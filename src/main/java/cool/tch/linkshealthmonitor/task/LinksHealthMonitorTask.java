@@ -7,6 +7,7 @@ import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
 import cool.tch.linkshealthmonitor.service.CustomResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import run.halo.app.extension.Metadata;
@@ -73,7 +74,7 @@ public class LinksHealthMonitorTask {
             () -> executeTaskLogic(config),
             taskScheduler,
             // getPractialCron(config)
-            "0 0/1 * * * ?"
+            "0 0/2 * * * ?"
         );
 
         // 启动任务
@@ -86,6 +87,8 @@ public class LinksHealthMonitorTask {
      */
     private void executeTaskLogic(LinksHealthMonitorConfig config) {
 
+        log.info("{}【{}】友链监测开始", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR);
+
         // 自定义模型的对象
         LinksHealthMonitorResult monitorResult = new LinksHealthMonitorResult();
         LinksHealthMonitorResult.ResultSpec resultSpec = new LinksHealthMonitorResult.ResultSpec();
@@ -97,10 +100,15 @@ public class LinksHealthMonitorTask {
         // 自定义Cron是否可用
         resultSpec.setCustomizedCronAvailable(LinksHealthMonitorUtils.checkCronExpression(customizedCron));
         // 本站外部地址
-        resultSpec.setExternalUrl(service.getExternalUrl());
+        String externalUrl = service.getExternalUrl();
+        resultSpec.setExternalUrl(externalUrl);
 
-        // 友链监测记录
-        resultSpec.setLinkHealthCheckRecordList(linkHealthCheck(config, resultSpec));
+        // 标准化
+        String normalizeUrl = LinksHealthMonitorUtils.normalizeUrl(externalUrl);
+        // 本站外部地址不为空时，友链监测记录
+        if(StringUtils.isNotBlank(normalizeUrl)) {
+            resultSpec.setLinkHealthCheckRecordList(linkHealthCheck(config, resultSpec));
+        }
 
         // 元数据
         Metadata metadata = new Metadata();
@@ -109,6 +117,8 @@ public class LinksHealthMonitorTask {
 
         // 创建自定义模型的对象
         monitorResult.setResultSpec(resultSpec);
+
+        log.info("{}【{}】友链监测结束", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR);
         client.create(monitorResult)
             .doOnError(error -> {
                 log.error("{}【{}】创建自定义模型的对象失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, error.getMessage(), error);
@@ -117,10 +127,10 @@ public class LinksHealthMonitorTask {
     }
 
     /**
-     * 友链检测
+     * 友链监测
      * @param config 插件配置
      * @param resultSpec 自定义模型的对象
-     * @return 友链检测记录
+     * @return 友链监测记录
      */
     private List<LinksHealthMonitorResult.LinkHealthCheckRecord> linkHealthCheck(
         LinksHealthMonitorConfig config, LinksHealthMonitorResult.ResultSpec resultSpec) {
@@ -131,25 +141,37 @@ public class LinksHealthMonitorTask {
 
         // 查询所有的友链
         List<Link> allLinks = service.getAllLinks();
-        // 无需检测友链
-        String[] notRequierdMonitorlinks = config.getNotRequierdMonitorlinks();
+        // 无需监测友链
+        String[] notRequiredMonitorLinks = config.getNotRequiredMonitorLinks();
 
         // 获取全部的友链页面路由
         String[] allFriendLinkRoutes = LinksHealthMonitorUtils.getAllFriendLinkRoutes(config);
 
-        // 友链检测
-        allLinks.forEach(link -> {
-            // 获取友链元数据的name
+        log.info("{}【{}】友链监测中，无需监测友链为： {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, Arrays.toString(notRequiredMonitorLinks));
+
+        // 友链监测
+        for (Link link : allLinks) {
+            // 获取友链元数据的name，也就是url
             String metaName = link.getMetadata().getName();
-            if (Arrays.stream(notRequierdMonitorlinks).noneMatch(metaName::equals)) {
+            // 友链自定义对象的LinkSpec
+            Link.LinkSpec spec = link.getSpec();
+            if (StringUtils.isBlank(metaName) || spec == null) {
+                continue;
+            }
+
+            // 只监测需要监测的友链
+            if (notRequiredMonitorLinks == null || notRequiredMonitorLinks.length == 0 || Arrays.stream(notRequiredMonitorLinks).noneMatch(metaName::equals)) {
 
                 // 监测记录
                 LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord = new LinksHealthMonitorResult.LinkHealthCheckRecord();
 
                 // 记录友链基本信息
-                Link.LinkSpec spec = link.getSpec();
                 checkRecord.setLinkName(metaName);
-                String url = spec.getUrl();
+                // 标准化后的友链url
+                String url = LinksHealthMonitorUtils.normalizeUrl(spec.getUrl());
+                // 虽然新建链接时url就是必须的，也做判空处理（防御性编程，因为模型数据在Data Studio里可以修改）
+                if (StringUtils.isBlank(url)) continue;
+
                 checkRecord.setLinkUrl(url);
                 String displayName = spec.getDisplayName();
                 checkRecord.setLinkDisplayName(displayName);
@@ -161,20 +183,24 @@ public class LinksHealthMonitorTask {
                 checkRecord.setLinkGroupDisplayName(service.getGroupDisplayNameByName(groupName));
 
                 // 功能监测
-                // 1. 网站是否可以打开
+                // 网站是否可以打开
                 checkRecord.setWebsiteAccessible(LinksHealthMonitorUtils.isUrlAccessible(url));
-                // 2. 网站logo是否可以访问
-                checkRecord.setLogoAccessible(LinksHealthMonitorUtils.isUrlAccessible(logo));
-                // 3. 网站名称是否有变更
-                checkRecord.setDisplayNameChanged(LinksHealthMonitorUtils.isDisplayNameChanged(url, displayName));
-                // 4. 网站是否包含本站友链
-                checkRecord.setContainsOurLink(LinksHealthMonitorUtils.isContainsOurLink(url, resultSpec.getExternalUrl()));
-                // 5,6,7. 最新更新文章名称，url，更新时间
+                // 网站logo是否可以访问
+                if (StringUtils.isNotBlank(logo)) {
+                    checkRecord.setLogoAccessible(LinksHealthMonitorUtils.isUrlAccessible(logo));
+                } else {
+                    checkRecord.setLogoAccessible(false);
+                }
+                // 网站名称是否有变更
+                LinksHealthMonitorUtils.isDisplayNameChanged(url, displayName, checkRecord);
+                // 网站是否包含本站友链
+                LinksHealthMonitorUtils.isContainsOurLink(url, resultSpec.getExternalUrl(), allFriendLinkRoutes, checkRecord);
+                // 最新更新文章名称，url，更新时间
                 LinksHealthMonitorUtils.getLatestArticle(url, checkRecord);
 
                 recordList.add(checkRecord);
             }
-        });
+        };
 
         return recordList;
     }
