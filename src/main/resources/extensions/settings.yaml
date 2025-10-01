@@ -41,7 +41,6 @@ spec:
             labelField: spec.displayName
             valueField: metadata.name
             fieldSelectorKey: spec.displayName
-          validation: required
           help: 请选择不需要监测的友链
         - $formkit: list
           name: friendLinkRoutes
