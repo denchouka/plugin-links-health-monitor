@@ -336,9 +336,9 @@ public class MonitorableScheduledFuture {
      */
     private enum TaskStatus {
         // 已创建
-        CREATED("已创建"),
+        CREATED("已创建,等待执行"),
         // 运行中
-        RUNNING("运行中"),
+        RUNNING("执行中"),
         // 已停止
         STOPPED("已停止"),
         // 执行失败
@@ -381,7 +381,7 @@ public class MonitorableScheduledFuture {
         private final String nextScheduledExecution;
         // 距离下次任务执行的剩余时间（天时分秒）（前端展示）
         private final String remainingTime;
-        // 任务是否在执行（前端展示）
+        // 任务是否在执行（前端展示） --TODO 准备删除
         private final boolean running;
     }
 }
