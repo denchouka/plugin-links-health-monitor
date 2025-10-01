@@ -32,7 +32,6 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         private Boolean customizedCronEnable;
 
         // 自定义cron
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private String customizedCron;
 
         // 自定义Cron是否可用
@@ -72,7 +71,7 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         private String linkGroupDisplayName;
 
         // 功能监测
-        // 网站是否可以打开
+        // 网站是否可以访问
         private boolean websiteAccessible;
 
         // 网站logo是否可以访问
