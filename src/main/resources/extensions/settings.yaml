@@ -65,7 +65,7 @@ spec:
               attrs:
                 class: "formkit-help text-xs mt-2 text-gray-500 flex items-center mb-1 cursor-pointer"
                 innerHTML: "
-                          1.请注意自定义Cron的间隔周期较短时，短期内多次执行任务会给系统带来负担。
+                          1.请注意自定义Cron的间隔周期较短时，短期内频繁执行任务会给系统带来负担。
                           <br>
                           2.定时任务默认时区 Asia/Shanghai。
                           <br>
