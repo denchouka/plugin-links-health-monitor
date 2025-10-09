@@ -39,7 +39,7 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         private Boolean customizedCronAvailable;
 
         // 友链监测记录
-        private List<LinkHealthCheckRecord> LinkHealthCheckRecordList;
+        private List<LinkHealthMonitorRecord> LinkHealthMonitorRecordList;
 
         // 本站外部地址
         private String externalUrl;
@@ -49,7 +49,7 @@ public class LinksHealthMonitorResult extends AbstractExtension {
      * 友链监测记录
      */
     @Data
-    public static class LinkHealthCheckRecord {
+    public static class LinkHealthMonitorRecord {
 
         // 友链基本信息
         // 检索友链的key(自定义模型Link元数据的name)

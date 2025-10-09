@@ -177,7 +177,7 @@ public class LinksHealthMonitorUtils {
      * @param displayName 网站名称
      * @param checkRecord 监测记录
      */
-    public static void isDisplayNameChanged(String url, String displayName, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    public static void isDisplayNameChanged(String url, String displayName, LinksHealthMonitorResult.LinkHealthMonitorRecord checkRecord) {
 
         try{
             Document document = Jsoup
@@ -203,7 +203,7 @@ public class LinksHealthMonitorUtils {
      * @param allFriendLinkRoutes 全部的友链页面路由
      * @param checkRecord 监测记录
      */
-    public static void isContainsOurLink(String url, String ourUrl, String[] allFriendLinkRoutes, LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord) {
+    public static void isContainsOurLink(String url, String ourUrl, String[] allFriendLinkRoutes, LinksHealthMonitorResult.LinkHealthMonitorRecord checkRecord) {
         // 获取本站外部地址失败
         if (StringUtils.isBlank(ourUrl)) {
             return;
