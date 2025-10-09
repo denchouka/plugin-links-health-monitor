@@ -16,7 +16,7 @@ spec:
   repo: https://github.com/denchouka/plugin-links-health-monitor
   issues: https://github.com/denchouka/plugin-links-health-monitor/issues
   displayName: "Links Health Monitor"
-  description: "友情链接健康监测插件"
+  description: "友情链接健康监测插件，插件启动时自动创建定时任务执行监测"
   configMapName: links-health-monitor-setting-configMap
   settingName: links-health-monitor-setting
   pluginDependencies:
