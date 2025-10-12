@@ -2,6 +2,7 @@ package cool.tch.linkshealthmonitor.task;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.TriggerContext;
@@ -99,8 +100,6 @@ public class MonitorableScheduledFuture {
             } finally {
                 // 更新下次任务的执行时间
                 updateNextScheduledExecution(trigger);
-                // 任务结束，获取任务执行信息 测试用 TODO
-                getTaskExecuteInfo();
             }
         };
 
@@ -121,52 +120,19 @@ public class MonitorableScheduledFuture {
     }
 
     /**
-     * 任务是否正在运行
-     * @return 任务是否正在运行
-     */
-    private boolean isRunning() {
-        return status.get() == TaskStatus.RUNNING &&
-            scheduledFuture != null &&
-            !scheduledFuture.isCancelled() &&
-            !scheduledFuture.isDone();
-    }
-
-    /**
-     * 获取任务执行信息（可对外提供）
-     * @return 任务执行信息
-     */
-    public TaskInfo getTaskExecuteInfo() {
-        // 获取任务信息 TODO
-        TaskInfo info = getTaskInfo();
-        System.out.println("获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息----------start");
-        System.out.println("任务状态: " + info.getTaskStatus());
-        System.out.println("Cron表达式: " + info.getCronExpression());
-        System.out.println("任务的计划执行时间: " + info.getLastScheduledExecution());
-        System.out.println("任务的实际执行时间: " + info.getLastActualExecution());
-        System.out.println("任务的实际完成时间: " + info.getLastCompletionExecution());
-        System.out.println("任务的执行时长（天时分秒）: " + info.getLastCompletionTime());
-        System.out.println("下次任务的计划执行时间 " + info.getNextScheduledExecution());
-        System.out.println("当前距离下次任务执行剩余时间(天时分秒): " + info.getRemainingTime());
-        System.out.println("任务是否正在运行: " + info.isRunning());
-        System.out.println("获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息获取任务信息----------end");
-        return info;
-    }
-
-    /**
-     * 获取任务状态信息
+     * 获取任务状态信息（可对外提供）
      * @return 任务状态信息
      */
-    private TaskInfo getTaskInfo() {
+    public TaskInfo getTaskInfo() {
         return new TaskInfo(
-            status.get().getDesc(),
+            status.get().getValue(),
             cronExpression,
             format(lastScheduledExecution),
             format(lastActualExecution),
             format(lastCompletionExecution),
             getLastCompletionTime(),
             format(nextScheduledExecution),
-            getRemainingTime(),
-            isRunning()
+            getRemainingTime()
         );
     }
 
@@ -334,27 +300,38 @@ public class MonitorableScheduledFuture {
     /**
      * 任务状态枚举
      */
-    private enum TaskStatus {
+    public enum TaskStatus {
+        // 未创建
+        UNCREATED("UNCREATED" ,"未创建"),
         // 已创建
-        CREATED("已创建,等待执行"),
+        CREATED("CREATED" ,"已创建,等待执行"),
         // 运行中
-        RUNNING("执行中"),
+        RUNNING("RUNNING" ,"执行中"),
         // 已停止
-        STOPPED("已停止"),
+        STOPPED("STOPPED" ,"已停止"),
         // 执行失败
-        FAILED("执行失败"),
+        FAILED("FAILED" ,"执行失败"),
         // 任务成功
-        COMPLETED("任务成功");
+        COMPLETED("COMPLETED" ,"任务成功");
+
+        // 任务值
+        private final String value;
 
         // 任务状态
         private final String desc;
 
-        TaskStatus(String desc) {
+        TaskStatus(String value, String desc) {
+            this.value = value;
             this.desc = desc;
         }
 
+        // 获取任务值
+        public String getValue() {
+            return value;
+        }
+
         // 获取任务状态
-        private String getDesc() {
+        public String getDesc() {
             return desc;
         }
     }
@@ -364,24 +341,27 @@ public class MonitorableScheduledFuture {
      */
     @AllArgsConstructor
     @Getter
-    private static class TaskInfo {
+    @ToString
+    public static class TaskInfo {
         // 任务状态（前端展示）
-        private final String taskStatus;
+        private String taskStatus;
         // cron表达式（前端展示）
-        private final String cronExpression;
+        private String cronExpression;
         // 任务的计划执行时间
-        private final String lastScheduledExecution;
-        // 任务的实际执行时间（前端展示）
-        private final String lastActualExecution;
-        // 任务的实际完成时间（前端展示）
-        private final String lastCompletionExecution;
-        // 任务的执行时长（天时分秒）（前端展示）
-        private final String lastCompletionTime;
+        private String lastScheduledExecution;
+        // 任务的执行开始时间（前端展示）
+        private String lastActualExecution;
+        // 任务的执行完成时间（前端展示）
+        private String lastCompletionExecution;
+        // 任务的实际执行时长（天时分秒）（前端展示）
+        private String lastCompletionTime;
         // 下次任务的计划执行时间（前端展示）
-        private final String nextScheduledExecution;
+        private String nextScheduledExecution;
         // 距离下次任务执行的剩余时间（天时分秒）（前端展示）
-        private final String remainingTime;
-        // 任务是否在执行（前端展示） --TODO 准备删除
-        private final boolean running;
+        private String remainingTime;
+
+        public TaskInfo(String taskStatus) {
+            this.taskStatus = taskStatus;
+        }
     }
 }

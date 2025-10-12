@@ -20,6 +20,7 @@ import java.util.List;
 
 import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR;
 import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
+import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.UNCREATED;
 
 /**
  * @Author Denchouka
@@ -74,11 +75,25 @@ public class LinksHealthMonitorTask {
             () -> executeTaskLogic(config),
             taskScheduler,
             // getPractialCron(config)
-            "0 0/2 * * * ?"
+            "0 0/5 * * * ?"
         );
 
         // 启动任务
         scheduledFuture.start();
+    }
+
+    /**
+     * 获取任务执行信息
+     * @return 任务执行信息
+     */
+    public MonitorableScheduledFuture.TaskInfo getTaskExecuteInfo() {
+        // 任务未创建
+        if (scheduledFuture == null) {
+            MonitorableScheduledFuture.TaskInfo taskInfo = new MonitorableScheduledFuture.TaskInfo(UNCREATED.getValue());
+            return taskInfo;
+        }
+
+        return scheduledFuture.getTaskInfo();
     }
 
     /**
@@ -107,7 +122,7 @@ public class LinksHealthMonitorTask {
         String normalizeUrl = LinksHealthMonitorUtils.normalizeUrl(externalUrl);
         // 本站外部地址不为空时，友链监测记录
         if(StringUtils.isNotBlank(normalizeUrl)) {
-            resultSpec.setLinkHealthCheckRecordList(linkHealthCheck(config, resultSpec));
+            resultSpec.setLinkHealthMonitorRecordList(linkHealthCheck(config, resultSpec));
         }
 
         // 元数据
@@ -132,11 +147,11 @@ public class LinksHealthMonitorTask {
      * @param resultSpec 自定义模型的对象
      * @return 友链监测记录
      */
-    private List<LinksHealthMonitorResult.LinkHealthCheckRecord> linkHealthCheck(
+    private List<LinksHealthMonitorResult.LinkHealthMonitorRecord> linkHealthCheck(
         LinksHealthMonitorConfig config, LinksHealthMonitorResult.ResultSpec resultSpec) {
 
         // 友链监测记录
-        List<LinksHealthMonitorResult.LinkHealthCheckRecord> recordList =
+        List<LinksHealthMonitorResult.LinkHealthMonitorRecord> recordList =
             new ArrayList<>();
 
         // 查询所有的友链
@@ -163,7 +178,7 @@ public class LinksHealthMonitorTask {
             if (notRequiredMonitorLinks == null || notRequiredMonitorLinks.length == 0 || Arrays.stream(notRequiredMonitorLinks).noneMatch(metaName::equals)) {
 
                 // 监测记录
-                LinksHealthMonitorResult.LinkHealthCheckRecord checkRecord = new LinksHealthMonitorResult.LinkHealthCheckRecord();
+                LinksHealthMonitorResult.LinkHealthMonitorRecord checkRecord = new LinksHealthMonitorResult.LinkHealthMonitorRecord();
 
                 // 记录友链基本信息
                 checkRecord.setLinkName(metaName);

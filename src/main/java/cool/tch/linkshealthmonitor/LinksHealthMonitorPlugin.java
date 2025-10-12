@@ -29,6 +29,7 @@ public class LinksHealthMonitorPlugin extends BasePlugin {
     public void start() {
         // 注册自定义模型
         schemeManager.register(LinksHealthMonitorResult.class);
+        // 自动创建任务 --TODO
     }
 
     @Override
@@ -36,5 +37,6 @@ public class LinksHealthMonitorPlugin extends BasePlugin {
         // 取消注册自定义模型
         Scheme scheme = schemeManager.get(LinksHealthMonitorResult.class);
         schemeManager.unregister(scheme);
+        // 停止任务 --TODO
     }
 }
