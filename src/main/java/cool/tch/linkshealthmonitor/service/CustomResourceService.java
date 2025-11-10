@@ -2,12 +2,14 @@ package cool.tch.linkshealthmonitor.service;
 
 import cool.tch.linkshealthmonitor.extension.Link;
 import cool.tch.linkshealthmonitor.extension.LinkGroup;
+import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import run.halo.app.extension.ListOptions;
+import run.halo.app.extension.PageRequestImpl;
 import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.extension.router.selector.FieldSelector;
 import run.halo.app.infra.ExternalUrlSupplier;
@@ -53,6 +55,48 @@ public class CustomResourceService {
                     return Mono.just(new ArrayList<>());
                 })
                 .block();
+    }
+
+    /**
+     * 获取最新友链监测记录
+     * @return 最新友链监测记录
+     */
+    public Mono<LinksHealthMonitorResult> getLatestResult() {
+        // 筛选对象metadata.deletionTimestamp为空的，即未被删除的数据
+        ListOptions listOptions = new ListOptions();
+        FieldSelector fieldSelector = FieldSelector.of(isNull("metadata.deletionTimestamp"));
+        listOptions.setFieldSelector(fieldSelector);
+
+        // 排序
+        Sort sort = Sort.by(Sort.Order.desc("metadata.creationTimestamp"));
+        // 分页
+        PageRequestImpl pageRequest = PageRequestImpl.of(0, 1, sort);
+        // 分页查询数据
+        return client.listBy(LinksHealthMonitorResult.class,
+                listOptions,
+                pageRequest
+            )
+            .timeout(Duration.ofSeconds(10))
+            .onErrorResume(error -> {
+                log.error("{}【{}】获取最新友链监测记录失败: {}", LINKS_HEALTH_MONITOR_DESC,
+                    LINKS_HEALTH_MONITOR, error.getMessage(), error);
+                return Mono.empty();
+            })
+            .flatMap(listResult -> {
+                if (listResult != null && !listResult.getItems().isEmpty()) {
+                    return Mono.just(listResult.getItems().get(0));
+                } else {
+                    return Mono.empty();
+                }
+            });
+    }
+
+    /**
+     * 构建按创建时间降序排序的 Sort 对象
+     * @return Sort 对象
+     */
+    private Sort getLatestSort() {
+        return Sort.by(Sort.Order.desc("metadata.creationTimestamp"));
     }
 
     /**

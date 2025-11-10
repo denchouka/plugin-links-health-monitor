@@ -1,5 +1,7 @@
 package cool.tch.linkshealthmonitor.endpoint;
 
+import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
+import cool.tch.linkshealthmonitor.service.CustomResourceService;
 import cool.tch.linkshealthmonitor.task.LinksHealthMonitorTask;
 import cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +28,14 @@ public class LinksHealthMonitorEndpoint implements CustomEndpoint {
 
     private final LinksHealthMonitorTask linksHealthMonitorTask;
 
+    // 操作自定义模型
+    private final CustomResourceService service;
+
     @Override
     public RouterFunction<ServerResponse> endpoint() {
         return RouterFunctions.route()
             .GET("/status", RequestPredicates.accept(APPLICATION_JSON), this::status)
+            .GET("/latestResult", RequestPredicates.accept(APPLICATION_JSON), this::latestResults)
             .build();
     }
 
@@ -41,8 +47,17 @@ public class LinksHealthMonitorEndpoint implements CustomEndpoint {
     private Mono<ServerResponse> status(ServerRequest request) {
         MonitorableScheduledFuture.TaskInfo taskInfo =
             linksHealthMonitorTask.getTaskExecuteInfo();
-        System.out.println("任务信息 = " + taskInfo.toString());
         return ServerResponse.ok().bodyValue(taskInfo);
+    }
+
+    /**
+     * 获取最新友链监测记录
+     * @param request request
+     * @return 友链监测结果
+     */
+    private Mono<ServerResponse> latestResults(ServerRequest request) {
+        Mono<LinksHealthMonitorResult> latestResult = service.getLatestResult();
+        return ServerResponse.ok().body(latestResult, LinksHealthMonitorResult.class);
     }
 
     @Override
