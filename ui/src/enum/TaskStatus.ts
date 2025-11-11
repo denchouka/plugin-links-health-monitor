@@ -32,19 +32,11 @@ export function getTaskStatusLabel(status: TaskStatus): string {
 }
 
 /**
- * 是否显示插件配置
+ * 是否显示插件监测结果
  * @param status - 任务状态枚举值
- * @returns 是否显示插件配置
+ * @returns 是否显示插件监测结果
  */
-export function isShowResultSpec(status: TaskStatus): boolean {
-  return true;
-}
-
-/**
- * 是否显示监测记录
- * @param status - 任务状态枚举值
- * @returns 是否显示插件配置
- */
-export function isShowMonitorRecord(status: TaskStatus): boolean {
-  return true;
+export function isShowResult(status: TaskStatus): boolean {
+  // 只有任务成功时才显示
+  return status === TaskStatus.COMPLETED;
 }
