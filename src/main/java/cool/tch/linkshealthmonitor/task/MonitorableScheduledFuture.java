@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.TriggerContext;
+
+import org.springframework.scheduling.support.CronExpression;
 import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.scheduling.support.SimpleTriggerContext;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -71,6 +71,10 @@ public class MonitorableScheduledFuture {
 
         // 开始新的任务，状态为已创建
         status.set(TaskStatus.CREATED);
+
+        // 初始化任务计划执行时间
+        updateLastScheduledExecution(true);
+
         // cron
         CronTrigger trigger = new CronTrigger(cronExpression, getZoneId());
 
@@ -78,7 +82,7 @@ public class MonitorableScheduledFuture {
         Runnable monitorableTask = () -> {
 
             // 更新任务的计划执行时间
-            updateLastScheduledExecution();
+            updateLastScheduledExecution(false);
 
             try{
                 // 状态为运行中
@@ -138,15 +142,21 @@ public class MonitorableScheduledFuture {
 
     /**
      * 更新任务的计划执行时间
+     * @param isInit 是否是初始化状态
      */
-    private void updateLastScheduledExecution() {
-        // 任务的计划执行时间(也是上次预计的下次计划执行时间)
-        if (nextScheduledExecution.get() != null) {
-            lastScheduledExecution.set(nextScheduledExecution.get());
-        } else {
-            // 第一次执行则为当前时间
-            lastScheduledExecution.set(now());
+    private void updateLastScheduledExecution(boolean isInit) {
+        // 初始化任务计划执行时间（此时任务已创建等待执行）
+        if (isInit) {
+            CronExpression cronExpr = CronExpression.parse(cronExpression);
+            LocalDateTime next = cronExpr.next(now());
+            lastScheduledExecution.set(next);
         }
+
+        // 任务的计划执行时间(也是上次预计的下次计划执行时间)
+        lastScheduledExecution.set(nextScheduledExecution.get());
+        // 清空执行完成时间、下次任务执行时间
+        lastCompletionExecution.set(null);
+        nextScheduledExecution.set(null);
     }
 
     /**
@@ -169,18 +179,9 @@ public class MonitorableScheduledFuture {
      * @param trigger Cron
      */
     private void updateNextScheduledExecution(CronTrigger trigger) {
-        // 上次计划执行时间
-        Instant lastScheduled = localDateTime2Instant(lastScheduledExecution);
-        // 上次实际执行时间
-        Instant lastActual = localDateTime2Instant(lastActualExecution);
-        // 上次完成时间
-        Instant lastCompletion = localDateTime2Instant(lastCompletionExecution);
-
-        TriggerContext context = new SimpleTriggerContext(lastScheduled, lastActual, lastCompletion);
-        Instant nextExecution = trigger.nextExecution(context);
-        if (nextExecution != null) {
-            nextScheduledExecution.set(instant2LocalDateTime(nextExecution));
-        }
+        CronExpression cronExpr = CronExpression.parse(cronExpression);
+        LocalDateTime next = cronExpr.next(now());
+        nextScheduledExecution.set(next);
     }
 
     /**
@@ -201,7 +202,12 @@ public class MonitorableScheduledFuture {
      * @return 当前时间距离下次任务执行的剩余时间（天时分秒）
      */
     private String getRemainingTime() {
-        // 任务还未执行完时，nextScheduledExecution
+        // 已创建,等待执行状态时
+        if (status.get() == TaskStatus.CREATED) {
+            return getTimeDuration(now(), lastScheduledExecution.get());
+        }
+
+        // 任务还未执行完时
         if (nextScheduledExecution.get() == null) {
             return null;
         }
@@ -218,8 +224,12 @@ public class MonitorableScheduledFuture {
     private String getTimeDuration(LocalDateTime start, LocalDateTime end) {
         Duration between = Duration.between(start, end);
 
-        // 负数（时间已过）
+        // 负数（任务执行中，此时结束时间还是上次的结束时间）
         if (between.isNegative()) {
+            System.out.println("--------------------------------------------------------start:" + start);
+            System.out.println("--------------------------------------------------------end:" + end);
+            //return null;
+            // TODO 应该是不会出现这种情况，再观察观察
             return NEXT_TASK_TIME_PAST;
         }
 
