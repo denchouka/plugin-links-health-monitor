@@ -87,6 +87,7 @@ public class MonitorableScheduledFuture {
             try{
                 // 状态为运行中
                 status.set(TaskStatus.RUNNING);
+
                 // 更新任务的实际执行时间
                 updateLastActualExecution();
 
@@ -150,13 +151,15 @@ public class MonitorableScheduledFuture {
             CronExpression cronExpr = CronExpression.parse(cronExpression);
             LocalDateTime next = cronExpr.next(now());
             lastScheduledExecution.set(next);
+            // 备份给下次任务的计划执行时间
+            nextScheduledExecution.set(next);
+        } else {
+            // 任务的计划执行时间(也是上次预计的下次计划执行时间)
+            lastScheduledExecution.set(nextScheduledExecution.get());
+            // 清空执行完成时间、下次任务执行时间
+            lastCompletionExecution.set(null);
+            nextScheduledExecution.set(null);
         }
-
-        // 任务的计划执行时间(也是上次预计的下次计划执行时间)
-        lastScheduledExecution.set(nextScheduledExecution.get());
-        // 清空执行完成时间、下次任务执行时间
-        lastCompletionExecution.set(null);
-        nextScheduledExecution.set(null);
     }
 
     /**
@@ -203,7 +206,7 @@ public class MonitorableScheduledFuture {
      */
     private String getRemainingTime() {
         // 已创建,等待执行状态时
-        if (status.get() == TaskStatus.CREATED) {
+        if (status.get() == TaskStatus.CREATED && lastScheduledExecution.get() != null) {
             return getTimeDuration(now(), lastScheduledExecution.get());
         }
 
