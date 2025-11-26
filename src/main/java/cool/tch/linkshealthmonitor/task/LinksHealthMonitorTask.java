@@ -74,8 +74,7 @@ public class LinksHealthMonitorTask {
         scheduledFuture = new MonitorableScheduledFuture(
             () -> executeTaskLogic(config),
             taskScheduler,
-            // getPractialCron(config)
-            "0 0/5 * * * ?"
+            getPractialCron(config)
         );
 
         // 启动任务
