@@ -479,10 +479,10 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
 
 // 表格样式
 .monitor-record {
-  .table-container {
 
+  .table-container {
     overflow-x: auto;
-    //max-height: 500px;
+    max-height: 650px;
     overflow-y: auto;
   }
 
@@ -494,6 +494,7 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 10;
+      background-color: $card-background; // 添加不透明背景色
 
       tr {
         th {
@@ -504,6 +505,7 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
           border-bottom: 2px solid $border-color;
           white-space: nowrap;
           font-weight: normal;
+          background-color: $card-background; // 添加不透明背景色
         }
       }
     }
@@ -557,12 +559,12 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       max-width: 200px;
     }
 
-    .center-cell {
-      display: flex;
-      justify-content: center; /* 水平居中 */
-      align-items: center;     /* 垂直居中 */
-      height: 100%;            /* 确保占满单元格高度 */
-    }
+    //.center-cell {
+      //display: flex;
+      //justify-content: center; /* 水平居中 */
+      //align-items: center;     /* 垂直居中 */
+      //height: 100%;            /* 确保占满单元格高度 */
+    //}
 
     .link-logo {
       height: 30px;
