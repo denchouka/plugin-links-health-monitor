@@ -321,31 +321,31 @@ onMounted(() => {
                     <!-- 网站名称 -->
                     <td class="name-column">{{ record.linkDisplayName }}</td>
                     <!-- 网站Logo -->
-                    <td class="center-cell">
+                    <td class="logo-column">
                       <img class="link-logo" :src="record.linkLogo">
                     </td>
                     <!-- 友链分组 -->
                     <td class="group-column">{{ record.linkGroupDisplayName ?? '-' }}</td>
                     <!-- 网站是否可访问-->
-                    <td class="center-cell">
+                    <td>
                       <BooleanIcon :value="record.websiteAccessible" />
                     </td>
                     <!-- Logo是否可访问-->
-                    <td class="center-cell">
+                    <td>
                       <BooleanIcon :value="record.logoAccessible" />
                     </td>
                     <!-- 网站名称是否变更 -->
-                    <td class="center-cell">
+                    <td>
                       <BooleanIcon :value="record.displayNameChanged" />
                     </td>
                     <!-- 网站最新名称 -->
                     <td class="name-column">{{ record.latestDisplayName }}</td>
                     <!-- 是否可以获取友链页面路由 -->
-                    <td class="center-cell">
+                    <td>
                       <BooleanIcon :value="record.getFriendLinkRoute" />
                     </td>
                     <!-- 是否添加本站友链 -->
-                    <td class="center-cell">
+                    <td>
                       <BooleanIcon :value="record.containsOurLink" />
                     </td>
                   </tr>
@@ -559,25 +559,19 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       max-width: 200px;
     }
 
-    //.center-cell {
-      //display: flex;
-      //justify-content: center; /* 水平居中 */
-      //align-items: center;     /* 垂直居中 */
-      //height: 100%;            /* 确保占满单元格高度 */
-    //}
+    .logo-column {
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-    .link-logo {
-      height: 30px;
-      width: 30px;
+      .link-logo {
+        height: 30px;
+        width: 30px;
+      }
     }
 
     .group-column {
       align-content: center;
-    }
-
-    .boolean-column {
-      width: 100px;
-      min-width: 100px;
     }
   }
 
