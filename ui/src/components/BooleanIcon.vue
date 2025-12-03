@@ -41,3 +41,10 @@ const errorIcon = {
 const iconPath = computed(() => props.value ? successIcon.path : errorIcon.path)
 const iconColor = computed(() => props.value ? successIcon.color : errorIcon.color)
 </script>
+
+<style lang="scss" scoped>
+.icon {
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+</style>
