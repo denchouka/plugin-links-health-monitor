@@ -387,9 +387,7 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
 <style lang="scss" scoped>
 // 变量定义
 $primary-color: #2888bd;
-$background-color: #f8f9fa;
 $card-background: #ffffff;
-$text-color: #2b2d42;
 $text-light: #8d99ae;
 $border-color: #e9ecef;
 $border-radius: 8px;
@@ -397,7 +395,6 @@ $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
 
 .friend-link-monitor {
-  // max-width: 1200px;
   margin: 0 auto;
 
   .content {
@@ -519,7 +516,7 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 10;
-      background-color: $card-background; // 添加不透明背景色
+      background-color: $card-background;
 
       tr {
         th {
@@ -530,7 +527,7 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
           border-bottom: 2px solid $border-color;
           white-space: nowrap;
           font-weight: normal;
-          background-color: $card-background; // 添加不透明背景色
+          background-color: $card-background;
         }
       }
     }
@@ -580,7 +577,6 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
 
     .name-column {
       font-weight: 400;
-      font-weight: normal;
       max-width: 200px;
     }
 
@@ -627,9 +623,6 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
     // 响应式：小屏设备缩小字体和内边距
     @media (max-width: 600px) {
       padding: 24px;
-      p {
-        font-size: 1rem;
-      }
       img {
         max-height: 120px;
       }
@@ -641,10 +634,6 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
 @media (max-width: 768px) {
   .friend-link-monitor {
     padding: 10px;
-
-    .header h1 {
-      font-size: 2rem;
-    }
 
     .status-cards {
       grid-template-columns: 1fr;
