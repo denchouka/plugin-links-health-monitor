@@ -43,6 +43,12 @@ public class LinksHealthMonitorResult extends AbstractExtension {
 
         // 本站外部地址
         private String externalUrl;
+
+        // 友链总数
+        private Integer linkCount;
+
+        // 无需监测友链总数
+        private Integer notRequiredLinkCount;
     }
 
     /**

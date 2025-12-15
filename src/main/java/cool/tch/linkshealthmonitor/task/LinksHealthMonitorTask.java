@@ -155,8 +155,10 @@ public class LinksHealthMonitorTask {
 
         // 查询所有的友链
         List<Link> allLinks = service.getAllLinks();
+        resultSpec.setLinkCount(allLinks.size());
         // 无需监测友链
         String[] notRequiredMonitorLinks = config.getNotRequiredMonitorLinks();
+        resultSpec.setNotRequiredLinkCount(notRequiredMonitorLinks.length);
 
         // 获取全部的友链页面路由
         String[] allFriendLinkRoutes = LinksHealthMonitorUtils.getAllFriendLinkRoutes(config);

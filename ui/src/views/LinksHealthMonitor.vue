@@ -64,6 +64,9 @@ interface Config {
   customizedCron: string
   customizedCronAvailable: string
   externalUrl: string
+  linkCount: string
+  notRequiredLinkCount: string
+
 }
 // 插件配置初始化
 const config = ref<Config>({
@@ -71,6 +74,8 @@ const config = ref<Config>({
   customizedCron: '-',
   customizedCronAvailable: '-',
   externalUrl: '-',
+  linkCount: '-',
+  notRequiredLinkCount: '-'
 })
 
 // 友链监测记录
@@ -120,6 +125,8 @@ const fetchMonitorResult = async () => {
             : '否'
           : '-',
         externalUrl: data.externalUrl,
+        linkCount: data.linkCount,
+        notRequiredLinkCount: data.notRequiredLinkCount
       }
 
       // 友链监测记录
@@ -136,6 +143,11 @@ onMounted(() => {
   // 获取任务状态
   fetchTaskStatus()
 })
+
+// 友链logo点击事件
+const onLinkLogoUrlClick = async (linkUrl: string) => {
+  await navigator.clipboard.writeText(linkUrl)
+}
 </script>
 
 <template>
@@ -250,6 +262,14 @@ onMounted(() => {
                   <span class="label">本站外部地址</span>
                   <span class="value">{{ config.externalUrl }}</span>
                 </div>
+                <div class="info-item">
+                  <span class="label">友链总数</span>
+                  <span class="value">{{ config.linkCount }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">无需监测友链总数</span>
+                  <span class="value">{{ config.notRequiredLinkCount }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -322,7 +342,12 @@ onMounted(() => {
                     <td class="name-column">{{ record.linkDisplayName }}</td>
                     <!-- 网站Logo -->
                     <td class="logo-column">
-                      <img class="link-logo" :src="record.linkLogo">
+                      <img
+                        class="link-logo"
+                        :title="'点击复制: ' + record.linkLogo"
+                        :src="record.linkLogo"
+                        @click="onLinkLogoUrlClick(record.linkLogo)"
+                      >
                     </td>
                     <!-- 友链分组 -->
                     <td class="group-column">{{ record.linkGroupDisplayName ?? '-' }}</td>
