@@ -63,8 +63,6 @@ public class LinksHealthMonitorTask {
      * @param config 插件配置
      */
     public void executeTask(LinksHealthMonitorConfig config) {
-        System.out.println("执行任务执行任务执行任务执行任务执行   cron = " + config.getCustomizedCron());
-
         // 如果有任务，先停止
         if (scheduledFuture != null) {
             scheduledFuture.stop();

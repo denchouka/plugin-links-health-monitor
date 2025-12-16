@@ -229,10 +229,6 @@ public class MonitorableScheduledFuture {
 
         // 负数（任务执行中，此时结束时间还是上次的结束时间）
         if (between.isNegative()) {
-            System.out.println("--------------------------------------------------------start:" + start);
-            System.out.println("--------------------------------------------------------end:" + end);
-            //return null;
-            // TODO 应该是不会出现这种情况，再观察观察
             return NEXT_TASK_TIME_PAST;
         }
 
