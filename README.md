@@ -4,7 +4,7 @@ links-health-monitor - Halo 插件
 
 ## 简介
 
-这是一个基于 Halo 的插件项目。
+这是一个基于 Halo 的插件项目，用于监测友链的健康状态。
 
 ## 开发环境
 
