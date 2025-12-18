@@ -1,10 +1,9 @@
-# links-health-monitor
-
-links-health-monitor - Halo 插件
-
 ## 简介
 
-这是一个基于 Halo 的插件项目，用于监测友链的健康状态。
+友情链接健康监测插件，插件启动时自动创建定时任务执行监测。
+
+## 文档
+https://tch.cool/archives/links-health-monitor
 
 ## 开发环境
 
