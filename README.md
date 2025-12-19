@@ -31,7 +31,7 @@ https://tch.cool/archives/links-health-monitor
 ## 问题反馈
 如果在使用过程中遇到任何问题，或有任何建议，欢迎通过以下方式反馈：
 - [GitHub Issues](https://github.com/your-repo/halo-plugin-footprint/issues)
-   （反馈时最好附上网站地址、简要的描述和必要的log。）
+   （反馈时最好附上网站地址、简要的描述和必要的运行日志。）
 
 ## 许可证
 [GPL-3.0](./LICENSE) © Denchouka 
