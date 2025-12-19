@@ -22,7 +22,7 @@ https://tch.cool/archives/links-health-monitor
 
 ### 方式二：手动安装
 1. 从以下地址下载最新版本 JAR 文件：
-    - GitHub Releases：https://github.com/denchouka/plugin-links-health-monitor/releases
+    - [GitHub Releases](https://github.com/denchouka/plugin-links-health-monitor/releases)
 2. 在 Halo 后台管理界面 -> 插件 -> 上传插件 -> 选择下载好的 JAR 文件
 
 ## 依赖插件
