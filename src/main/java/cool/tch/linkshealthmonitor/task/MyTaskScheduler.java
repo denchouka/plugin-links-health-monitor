@@ -19,9 +19,8 @@ public class MyTaskScheduler {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(Constant.CUSTOM_THREAD_POOL_SIZE);
         scheduler.setThreadNamePrefix(Constant.CUSTOM_MODEL_METADATA_NAME_PREFIX);
-        // 服务关闭时,等待所有正在执行的任务完成
-        scheduler.setWaitForTasksToCompleteOnShutdown(true);
-        scheduler.setAwaitTerminationSeconds(Constant.CUSTOM_THREAD_AWAIT_TIME);
+        // 服务关闭时,不等待正在执行的任务完成
+        scheduler.setWaitForTasksToCompleteOnShutdown(false);
         //取消的任务立即从队列中移除，避免资源占用
         scheduler.setRemoveOnCancelPolicy(true);
         scheduler.initialize();
