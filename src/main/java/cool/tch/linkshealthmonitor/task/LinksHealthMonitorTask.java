@@ -7,9 +7,11 @@ import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
 import cool.tch.linkshealthmonitor.service.CustomResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import run.halo.app.extension.Metadata;
 import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.plugin.ReactiveSettingFetcher;
@@ -153,10 +155,18 @@ public class LinksHealthMonitorTask {
 
         // 查询所有的友链
         List<Link> allLinks = service.getAllLinks();
-        resultSpec.setLinkCount(allLinks.size());
+        if (CollectionUtils.isEmpty(allLinks)) {
+            resultSpec.setLinkCount(0);
+        } else {
+            resultSpec.setLinkCount(allLinks.size());
+        }
         // 无需监测友链
         String[] notRequiredMonitorLinks = config.getNotRequiredMonitorLinks();
-        resultSpec.setNotRequiredLinkCount(notRequiredMonitorLinks.length);
+        if (ArrayUtils.isEmpty(notRequiredMonitorLinks)) {
+            resultSpec.setNotRequiredLinkCount(0);
+        } else {
+            resultSpec.setNotRequiredLinkCount(notRequiredMonitorLinks.length);
+        }
 
         // 获取全部的友链页面路由
         String[] allFriendLinkRoutes = LinksHealthMonitorUtils.getAllFriendLinkRoutes(config);
