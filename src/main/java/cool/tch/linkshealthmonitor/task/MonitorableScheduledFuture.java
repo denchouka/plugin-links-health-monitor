@@ -16,8 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_CRON;
-import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_CRON_DESC;
 import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_SHORTEST_TIME;
 import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_ZONE_ID;
 import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR;
@@ -136,7 +134,6 @@ public class MonitorableScheduledFuture {
     public TaskInfo getTaskInfo() {
         return new TaskInfo(
             status.get().getValue(),
-            DEFAULT_CRON.equals(cronExpression) ? cronExpression + DEFAULT_CRON_DESC : cronExpression,
             format(lastScheduledExecution),
             format(lastActualExecution),
             format(lastCompletionExecution),
@@ -359,8 +356,6 @@ public class MonitorableScheduledFuture {
     public static class TaskInfo {
         // 任务状态（前端展示）
         private String taskStatus;
-        // cron表达式（前端展示）
-        private String cronExpression;
         // 任务的计划执行时间
         private String lastScheduledExecution;
         // 任务的执行开始时间（前端展示）

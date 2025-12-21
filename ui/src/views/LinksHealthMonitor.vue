@@ -11,7 +11,6 @@ const taskStatus = ref<TaskStatus>(TaskStatus.UNCREATED)
 // 任务状态
 interface Status {
   taskStatus: string
-  cronExpression: string
   lastScheduledExecution: string
   lastActualExecution: string
   lastCompletionExecution: string
@@ -22,7 +21,6 @@ interface Status {
 // 任务状态初始化
 const status = ref<Status>({
   taskStatus: taskStatus.value,
-  cronExpression: '-',
   lastScheduledExecution: '-',
   lastActualExecution: '-',
   lastCompletionExecution: '-',
@@ -40,7 +38,6 @@ const fetchTaskStatus = async () => {
     // 更新页面数据
     status.value = {
       taskStatus: data.taskStatus,
-      cronExpression: data.cronExpression,
       lastScheduledExecution: data.lastScheduledExecution ?? '-',
       lastActualExecution: data.lastActualExecution ?? '-',
       lastCompletionExecution: data.lastCompletionExecution ?? '-',
@@ -63,6 +60,7 @@ interface Config {
   customizedCronEnable: string
   customizedCron: string
   customizedCronAvailable: string
+  cronExpression: string
   linkCount: string
   notRequiredLinkCount: string
 
@@ -72,6 +70,7 @@ const config = ref<Config>({
   customizedCronEnable: '-',
   customizedCron: '-',
   customizedCronAvailable: '-',
+  cronExpression: '-',
   linkCount: '-',
   notRequiredLinkCount: '-'
 })
@@ -122,6 +121,7 @@ const fetchMonitorResult = async () => {
             ? '是'
             : '否'
           : '-',
+        cronExpression: data.cronExpression,
         linkCount: data.linkCount,
         notRequiredLinkCount: data.notRequiredLinkCount
       }
@@ -190,10 +190,6 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
               </div>
               <div class="card-content">
                 <div class="info-item">
-                  <span class="label">执行任务的Cron表达式</span>
-                  <span class="value">{{ status.cronExpression }}</span>
-                </div>
-                <div class="info-item">
                   <span class="label">任务的计划执行时间</span>
                   <span class="value">{{ status.lastScheduledExecution }}</span>
                 </div>
@@ -256,6 +252,10 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                 <div class="info-item">
                   <span class="label">自定义Cron是否可用</span>
                   <span class="value">{{ config.customizedCronAvailable }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">执行任务的Cron表达式</span>
+                  <span class="value">{{ config.cronExpression }}</span>
                 </div>
                 <div class="info-item">
                   <span class="label">友链总数</span>

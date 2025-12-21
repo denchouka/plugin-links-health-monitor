@@ -38,6 +38,9 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         @Schema(defaultValue = "true")
         private Boolean customizedCronAvailable;
 
+        // 执行任务的Cron表达式
+        private String cronExpression;
+
         // 友链监测记录
         private List<LinkHealthMonitorRecord> LinkHealthMonitorRecordList;
 
