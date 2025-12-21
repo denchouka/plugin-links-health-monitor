@@ -81,6 +81,7 @@ public class MonitorableScheduledFuture {
         // 包装原始任务，添加监控逻辑
         Runnable monitorableTask = () -> {
 
+            log.info("{}【{}】友链监测开始", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR);
             // 更新任务的计划执行时间
             updateLastScheduledExecution(false);
 
@@ -101,11 +102,13 @@ public class MonitorableScheduledFuture {
             } catch (Exception e){
                 // 状态为失败
                 status.set(TaskStatus.FAILED);
-                log.error("{}【{}】执行任务失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, e.getMessage(), e);
+                log.error("{}【{}】中断任务执行，任务失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, e.getMessage(), e);
             } finally {
                 // 更新下次任务的执行时间
                 updateNextScheduledExecution(trigger);
             }
+
+            log.info("{}【{}】友链监测结束", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR);
         };
 
         // 执行任务
