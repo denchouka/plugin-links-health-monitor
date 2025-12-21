@@ -41,9 +41,6 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         // 友链监测记录
         private List<LinkHealthMonitorRecord> LinkHealthMonitorRecordList;
 
-        // 本站外部地址
-        private String externalUrl;
-
         // 友链总数
         private Integer linkCount;
 

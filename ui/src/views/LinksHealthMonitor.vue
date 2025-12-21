@@ -63,7 +63,6 @@ interface Config {
   customizedCronEnable: string
   customizedCron: string
   customizedCronAvailable: string
-  externalUrl: string
   linkCount: string
   notRequiredLinkCount: string
 
@@ -73,7 +72,6 @@ const config = ref<Config>({
   customizedCronEnable: '-',
   customizedCron: '-',
   customizedCronAvailable: '-',
-  externalUrl: '-',
   linkCount: '-',
   notRequiredLinkCount: '-'
 })
@@ -124,7 +122,6 @@ const fetchMonitorResult = async () => {
             ? '是'
             : '否'
           : '-',
-        externalUrl: data.externalUrl,
         linkCount: data.linkCount,
         notRequiredLinkCount: data.notRequiredLinkCount
       }
@@ -163,7 +160,8 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
         <div class="content">
           <!-- 状态卡片区域 -->
           <div class="status-cards">
-            <!-- 任务状态 -->
+
+            <!-- 任务状态start -->
             <div class="card task-status">
               <div class="card-header">
                 <div class="card-title">
@@ -221,8 +219,9 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                 </div>
               </div>
             </div>
+            <!-- 任务状态end -->
 
-            <!-- 插件配置 -->
+            <!-- 插件配置start -->
             <div class="card plugin-config">
               <div class="card-header">
                 <div class="card-title">
@@ -259,10 +258,6 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                   <span class="value">{{ config.customizedCronAvailable }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="label">本站外部地址</span>
-                  <span class="value">{{ config.externalUrl }}</span>
-                </div>
-                <div class="info-item">
                   <span class="label">友链总数</span>
                   <span class="value">{{ config.linkCount }}</span>
                 </div>
@@ -273,8 +268,9 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
               </div>
             </div>
           </div>
+          <!-- 插件配置end -->
 
-          <!-- 友链监测记录 -->
+          <!-- 友链监测记录start -->
           <div class="card monitor-record">
             <div class="card-header">
               <div class="card-title">
@@ -378,6 +374,7 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
               </table>
             </div>
           </div>
+          <!-- 友链监测记录end -->
         </div>
       </div>
     </VCard>

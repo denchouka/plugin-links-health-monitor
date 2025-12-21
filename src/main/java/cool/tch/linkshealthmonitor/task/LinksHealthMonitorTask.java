@@ -113,13 +113,12 @@ public class LinksHealthMonitorTask {
         resultSpec.setCustomizedCronAvailable(LinksHealthMonitorUtils.checkCronExpression(customizedCron));
         // 本站外部地址
         String externalUrl = service.getExternalUrl();
-        resultSpec.setExternalUrl(externalUrl);
 
         // 标准化
         String normalizeUrl = LinksHealthMonitorUtils.normalizeUrl(externalUrl);
         // 本站外部地址不为空时，友链监测记录
         if(StringUtils.isNotBlank(normalizeUrl)) {
-            resultSpec.setLinkHealthMonitorRecordList(linkHealthCheck(config, resultSpec));
+            resultSpec.setLinkHealthMonitorRecordList(linkHealthCheck(config, resultSpec, externalUrl));
         }
 
         // 元数据
@@ -139,12 +138,14 @@ public class LinksHealthMonitorTask {
 
     /**
      * 友链监测
+     *
      * @param config 插件配置
      * @param resultSpec 自定义模型的对象
+     * @param externalUrl 本站外部地址
      * @return 友链监测记录
      */
     private List<LinksHealthMonitorResult.LinkHealthMonitorRecord> linkHealthCheck(
-        LinksHealthMonitorConfig config, LinksHealthMonitorResult.ResultSpec resultSpec) {
+        LinksHealthMonitorConfig config, LinksHealthMonitorResult.ResultSpec resultSpec, String externalUrl) {
 
         // 友链监测记录
         List<LinksHealthMonitorResult.LinkHealthMonitorRecord> recordList =
@@ -216,7 +217,7 @@ public class LinksHealthMonitorTask {
                 // 网站名称是否有变更
                 LinksHealthMonitorUtils.isDisplayNameChanged(url, displayName, checkRecord);
                 // 网站是否包含本站友链
-                LinksHealthMonitorUtils.isContainsOurLink(url, LinksHealthMonitorUtils.normalizeUrl(resultSpec.getExternalUrl()), allFriendLinkRoutes, checkRecord);
+                LinksHealthMonitorUtils.isContainsOurLink(url, LinksHealthMonitorUtils.normalizeUrl(externalUrl), allFriendLinkRoutes, checkRecord);
 
                 recordList.add(checkRecord);
             }
