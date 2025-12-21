@@ -22,8 +22,6 @@ import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_FRIEND_LINK_
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_REQUEST_METHOD_GET;
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_REQUEST_USER_AGENT;
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_TIMEOUT_MS;
-import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR;
-import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
 import static cool.tch.linkshealthmonitor.constant.Constant.LOCAL_DATE_TIME_OUTPUT_FORMATTER;
 import static cool.tch.linkshealthmonitor.constant.Constant.PATH_SEPARATOR;
 
@@ -259,7 +257,7 @@ public class LinksHealthMonitorUtils {
                 }
             }
         } catch (Exception e) {
-            log.error("{}【{}】访问友链页面失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, friendLinkUrl);
+            // 访问友链页面失败
         }
     }
 
