@@ -101,8 +101,6 @@ public class LinksHealthMonitorTask {
      */
     private void executeTaskLogic(LinksHealthMonitorConfig config) {
 
-        log.info("{}【{}】友链监测开始", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR);
-
         // 自定义模型的对象
         LinksHealthMonitorResult monitorResult = new LinksHealthMonitorResult();
         LinksHealthMonitorResult.ResultSpec resultSpec = new LinksHealthMonitorResult.ResultSpec();
@@ -132,7 +130,6 @@ public class LinksHealthMonitorTask {
         // 创建自定义模型的对象
         monitorResult.setResultSpec(resultSpec);
 
-        log.info("{}【{}】友链监测结束", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR);
         client.create(monitorResult)
             .doOnError(error -> {
                 log.error("{}【{}】创建自定义模型的对象失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, error.getMessage(), error);
@@ -170,8 +167,6 @@ public class LinksHealthMonitorTask {
 
         // 获取全部的友链页面路由
         String[] allFriendLinkRoutes = LinksHealthMonitorUtils.getAllFriendLinkRoutes(config);
-
-        log.info("{}【{}】友链监测中，无需监测友链为： {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, Arrays.toString(notRequiredMonitorLinks));
 
         // 友链监测
         for (Link link : allLinks) {
