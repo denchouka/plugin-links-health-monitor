@@ -14,6 +14,9 @@ public class Constant {
     // 默认的cron表达式：每天0点执行一次
     public static final String DEFAULT_CRON = "0 0 0 * * ?";
 
+    // 默认的cron表达式描述
+    public static final String DEFAULT_CRON_DESC = "（默认的Cron表达式，每天0点执行监测一次）";
+
     // 自定义模型元数据名称前缀
     public static final String CUSTOM_MODEL_METADATA_NAME_PREFIX = "links-health-monitor-";
 
