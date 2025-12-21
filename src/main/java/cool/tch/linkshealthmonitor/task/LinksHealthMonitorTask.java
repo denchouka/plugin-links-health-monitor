@@ -152,18 +152,21 @@ public class LinksHealthMonitorTask {
 
         // 查询所有的友链
         List<Link> allLinks = service.getAllLinks();
-        if (CollectionUtils.isEmpty(allLinks)) {
-            resultSpec.setLinkCount(0);
-        } else {
-            resultSpec.setLinkCount(allLinks.size());
+        int allLinkCount = 0;
+        if (!CollectionUtils.isEmpty(allLinks)) {
+            allLinkCount = allLinks.size();
         }
+        resultSpec.setLinkCount(allLinkCount);
+
         // 无需监测友链
         String[] notRequiredMonitorLinks = config.getNotRequiredMonitorLinks();
-        if (ArrayUtils.isEmpty(notRequiredMonitorLinks)) {
-            resultSpec.setNotRequiredLinkCount(0);
-        } else {
-            resultSpec.setNotRequiredLinkCount(notRequiredMonitorLinks.length);
+        int notLinkCount = 0;
+        if (ArrayUtils.isNotEmpty(notRequiredMonitorLinks)) {
+            notLinkCount = notRequiredMonitorLinks.length;
         }
+        resultSpec.setNotRequiredLinkCount(notLinkCount);
+
+        log.info("{}【{}】友链监测中，友链总数：【{}】,无需监测友链总数：【{}】", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, allLinkCount, notLinkCount);
 
         // 获取全部的友链页面路由
         String[] allFriendLinkRoutes = LinksHealthMonitorUtils.getAllFriendLinkRoutes(config);
