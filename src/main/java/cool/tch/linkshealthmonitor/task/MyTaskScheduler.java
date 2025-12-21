@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @Author Denchouka
@@ -12,6 +13,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
  * @Desc 自定义一个TaskScheduler的Bean
  */
 @Configuration
+//@EnableScheduling
 public class MyTaskScheduler {
 
     @Bean
@@ -23,6 +25,8 @@ public class MyTaskScheduler {
         scheduler.setWaitForTasksToCompleteOnShutdown(false);
         //取消的任务立即从队列中移除，避免资源占用
         scheduler.setRemoveOnCancelPolicy(true);
+        // 拒绝策略（由提交任务的线程执行）
+        scheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         scheduler.initialize();
         return scheduler;
     }
