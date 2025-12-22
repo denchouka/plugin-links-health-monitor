@@ -23,6 +23,7 @@ import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_CRON;
 import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_CRON_DESC;
 import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR;
 import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
+import static cool.tch.linkshealthmonitor.task.LinksHealthMonitorUtils.getLinkMonitorProgress;
 import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.UNCREATED;
 
 /**
@@ -47,6 +48,13 @@ public class LinksHealthMonitorTask {
     private final TaskScheduler taskScheduler;
 
     private MonitorableScheduledFuture scheduledFuture;
+
+    // 友链总数
+    private int allLinkCount = 0;
+    // 无需监测友链总数
+    private int notRequiredLinkCount = 0;
+    // 已监测友链总数
+    private int monitoredLinkCount = 0;
 
 
     /**
@@ -93,7 +101,7 @@ public class LinksHealthMonitorTask {
             return taskInfo;
         }
 
-        return scheduledFuture.getTaskInfo();
+        return scheduledFuture.getTaskInfo(getLinkMonitorProgress(allLinkCount, notRequiredLinkCount, monitoredLinkCount));
     }
 
     /**
@@ -157,11 +165,13 @@ public class LinksHealthMonitorTask {
 
         // 查询所有的友链
         List<Link> allLinks = service.getAllLinks();
-        int allLinkCount = 0;
+        int linkCount = 0;
         if (!CollectionUtils.isEmpty(allLinks)) {
-            allLinkCount = allLinks.size();
+            linkCount = allLinks.size();
         }
-        resultSpec.setLinkCount(allLinkCount);
+        resultSpec.setLinkCount(linkCount);
+        // 友链总数
+        allLinkCount = linkCount;
 
         // 无需监测友链
         String[] notRequiredMonitorLinks = config.getNotRequiredMonitorLinks();
@@ -170,6 +180,8 @@ public class LinksHealthMonitorTask {
             notLinkCount = notRequiredMonitorLinks.length;
         }
         resultSpec.setNotRequiredLinkCount(notLinkCount);
+        // 无需监测友链总数
+        notRequiredLinkCount = notLinkCount;
 
         log.info("{}【{}】友链监测中，友链总数：【{}】,无需监测友链总数：【{}】", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, allLinkCount, notLinkCount);
 
@@ -177,6 +189,7 @@ public class LinksHealthMonitorTask {
         String[] allFriendLinkRoutes = LinksHealthMonitorUtils.getAllFriendLinkRoutes(config);
 
         // 友链监测
+        monitoredLinkCount = 0;
         for (Link link : allLinks) {
             // 获取友链元数据的name，也就是url
             String metaName = link.getMetadata().getName();
@@ -185,6 +198,9 @@ public class LinksHealthMonitorTask {
             if (StringUtils.isBlank(metaName) || spec == null) {
                 continue;
             }
+
+            // 已监测友链总数
+            monitoredLinkCount += 1;
 
             // 只监测需要监测的友链
             if (notRequiredMonitorLinks == null || notRequiredMonitorLinks.length == 0 || Arrays.stream(notRequiredMonitorLinks).noneMatch(metaName::equals)) {

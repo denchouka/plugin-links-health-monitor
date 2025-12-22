@@ -129,9 +129,10 @@ public class MonitorableScheduledFuture {
 
     /**
      * 获取任务状态信息（可对外提供）
+     * @param linkMonitorProgress 友链监测进度
      * @return 任务状态信息
      */
-    public TaskInfo getTaskInfo() {
+    public TaskInfo getTaskInfo(String linkMonitorProgress) {
         return new TaskInfo(
             status.get().getValue(),
             format(lastScheduledExecution),
@@ -139,7 +140,8 @@ public class MonitorableScheduledFuture {
             format(lastCompletionExecution),
             getLastCompletionTime(),
             format(nextScheduledExecution),
-            getRemainingTime()
+            getRemainingTime(),
+            linkMonitorProgress
         );
     }
 
@@ -368,6 +370,8 @@ public class MonitorableScheduledFuture {
         private String nextScheduledExecution;
         // 距离下次任务执行的剩余时间（天时分秒）（前端展示）
         private String remainingTime;
+        // 友链监测进度
+        private String linkMonitorProgress;
 
         public TaskInfo(String taskStatus) {
             this.taskStatus = taskStatus;
