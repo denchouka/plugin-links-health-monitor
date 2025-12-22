@@ -184,8 +184,7 @@ public class LinksHealthMonitorUtils {
                 .userAgent(HTTP_REQUEST_USER_AGENT)
                 .get();
             String title = document.title();
-            checkRecord.setDisplayNameChanged(displayName.equals(title));
-            // 当网站名称没变时新的名称不在网页显示
+            checkRecord.setDisplayNameChanged(title.contains(displayName));
             checkRecord.setLatestDisplayName(title);
         } catch(Exception e) {
             checkRecord.setDisplayNameChanged(false);
