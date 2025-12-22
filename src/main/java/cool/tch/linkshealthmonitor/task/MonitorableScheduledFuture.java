@@ -22,6 +22,11 @@ import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR
 import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
 import static cool.tch.linkshealthmonitor.constant.Constant.LOCAL_DATE_TIME_OUTPUT_FORMATTER;
 import static cool.tch.linkshealthmonitor.constant.Constant.NEXT_TASK_TIME_PAST;
+import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.COMPLETED;
+import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.CREATED;
+import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.FAILED;
+import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.RUNNING;
+import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.STOPPED;
 
 /**
  * @Author Denchouka
@@ -70,7 +75,7 @@ public class MonitorableScheduledFuture {
     public void start() {
 
         // 开始新的任务，状态为已创建
-        status.set(TaskStatus.CREATED);
+        status.set(CREATED);
 
         // 初始化任务计划执行时间
         updateLastScheduledExecution(true);
@@ -87,7 +92,7 @@ public class MonitorableScheduledFuture {
 
             try{
                 // 状态为运行中
-                status.set(TaskStatus.RUNNING);
+                status.set(RUNNING);
 
                 // 更新任务的实际执行时间
                 updateLastActualExecution();
@@ -98,10 +103,10 @@ public class MonitorableScheduledFuture {
                 // 更新任务的实际完成时间
                 updateLastCompletionExecution();
                 // 状态为完成
-                status.set(TaskStatus.COMPLETED);
+                status.set(COMPLETED);
             } catch (Exception e){
                 // 状态为失败
-                status.set(TaskStatus.FAILED);
+                status.set(FAILED);
                 log.error("{}【{}】中断任务执行，任务失败: {}", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, e.getMessage(), e);
             } finally {
                 // 更新下次任务的执行时间
@@ -123,7 +128,7 @@ public class MonitorableScheduledFuture {
             // 配置变更以后停止新的任务执行，现有的任务也不继续执行
             scheduledFuture.cancel(true);
             // 任务状态改为已停止
-            status.set(TaskStatus.STOPPED);
+            status.set(STOPPED);
         }
     }
 
@@ -133,6 +138,7 @@ public class MonitorableScheduledFuture {
      * @return 任务状态信息
      */
     public TaskInfo getTaskInfo(String linkMonitorProgress) {
+        TaskStatus currentStatus = status.get();
         return new TaskInfo(
             status.get().getValue(),
             format(lastScheduledExecution),
@@ -141,7 +147,8 @@ public class MonitorableScheduledFuture {
             getLastCompletionTime(),
             format(nextScheduledExecution),
             getRemainingTime(),
-            linkMonitorProgress
+            // 运行中或者任务成功时才显示
+            (currentStatus == RUNNING || currentStatus == COMPLETED) ? linkMonitorProgress : null
         );
     }
 
@@ -210,7 +217,7 @@ public class MonitorableScheduledFuture {
      */
     private String getRemainingTime() {
         // 已创建,等待执行状态时
-        if (status.get() == TaskStatus.CREATED && lastScheduledExecution.get() != null) {
+        if (status.get() == CREATED && lastScheduledExecution.get() != null) {
             return getTimeDuration(now(), lastScheduledExecution.get());
         }
 
