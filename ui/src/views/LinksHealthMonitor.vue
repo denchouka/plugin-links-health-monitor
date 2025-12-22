@@ -353,21 +353,21 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                     </td>
                     <!-- Logo是否可访问-->
                     <td>
-                      <BooleanIcon :value="record.logoAccessible" />
+                      <BooleanIcon v-if="record.websiteAccessible" :value="record.logoAccessible" />
                     </td>
                     <!-- 网站名称是否变更 -->
                     <td>
-                      <BooleanIcon :value="record.displayNameChanged" />
+                      <BooleanIcon v-if="record.websiteAccessible" :value="record.displayNameChanged" />
                     </td>
                     <!-- 网站最新名称 -->
                     <td class="name-column">{{ record.latestDisplayName }}</td>
                     <!-- 是否可以获取友链页面路由 -->
                     <td>
-                      <BooleanIcon :value="record.getFriendLinkRoute" />
+                      <BooleanIcon v-if="record.websiteAccessible" :value="record.getFriendLinkRoute" />
                     </td>
                     <!-- 是否添加本站友链 -->
                     <td>
-                      <BooleanIcon :value="record.containsOurLink" />
+                      <BooleanIcon v-if="record.websiteAccessible" :value="record.containsOurLink" />
                     </td>
                   </tr>
                 </tbody>

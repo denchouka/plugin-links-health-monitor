@@ -211,17 +211,23 @@ public class LinksHealthMonitorTask {
 
                 // 功能监测
                 // 网站是否可以打开
-                checkRecord.setWebsiteAccessible(LinksHealthMonitorUtils.isUrlAccessible(url));
-                // 网站logo是否可以访问
-                if (StringUtils.isNotBlank(logo)) {
-                    checkRecord.setLogoAccessible(LinksHealthMonitorUtils.isUrlAccessible(logo));
+                boolean websiteAccessible = LinksHealthMonitorUtils.isUrlAccessible(url);
+                checkRecord.setWebsiteAccessible(websiteAccessible);
+
+                if (websiteAccessible) {
+                    // 网站logo是否可以访问
+                    if (StringUtils.isNotBlank(logo)) {
+                        checkRecord.setLogoAccessible(LinksHealthMonitorUtils.isUrlAccessible(logo));
+                    } else {
+                        checkRecord.setLogoAccessible(false);
+                    }
+                    // 网站名称是否有变更
+                    LinksHealthMonitorUtils.isDisplayNameChanged(url, displayName, checkRecord);
+                    // 网站是否包含本站友链
+                    LinksHealthMonitorUtils.isContainsOurLink(url, LinksHealthMonitorUtils.normalizeUrl(externalUrl), allFriendLinkRoutes, checkRecord);
                 } else {
-                    checkRecord.setLogoAccessible(false);
+                    // 友链网站不可访问时，后续逻辑不再执行
                 }
-                // 网站名称是否有变更
-                LinksHealthMonitorUtils.isDisplayNameChanged(url, displayName, checkRecord);
-                // 网站是否包含本站友链
-                LinksHealthMonitorUtils.isContainsOurLink(url, LinksHealthMonitorUtils.normalizeUrl(externalUrl), allFriendLinkRoutes, checkRecord);
 
                 recordList.add(checkRecord);
             }
