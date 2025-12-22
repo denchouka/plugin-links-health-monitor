@@ -43,12 +43,6 @@ public class LinksHealthMonitorResult extends AbstractExtension {
 
         // 友链监测记录
         private List<LinkHealthMonitorRecord> LinkHealthMonitorRecordList;
-
-        // 友链总数
-        private Integer linkCount;
-
-        // 无需监测友链总数
-        private Integer notRequiredLinkCount;
     }
 
     /**

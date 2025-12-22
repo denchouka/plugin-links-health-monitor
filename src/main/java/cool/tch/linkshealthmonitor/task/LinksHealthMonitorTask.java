@@ -165,25 +165,19 @@ public class LinksHealthMonitorTask {
 
         // 查询所有的友链
         List<Link> allLinks = service.getAllLinks();
-        int linkCount = 0;
-        if (!CollectionUtils.isEmpty(allLinks)) {
-            linkCount = allLinks.size();
-        }
-        resultSpec.setLinkCount(linkCount);
         // 友链总数
-        allLinkCount = linkCount;
+        if (!CollectionUtils.isEmpty(allLinks)) {
+            allLinkCount = allLinks.size();
+        }
 
         // 无需监测友链
         String[] notRequiredMonitorLinks = config.getNotRequiredMonitorLinks();
-        int notLinkCount = 0;
-        if (ArrayUtils.isNotEmpty(notRequiredMonitorLinks)) {
-            notLinkCount = notRequiredMonitorLinks.length;
-        }
-        resultSpec.setNotRequiredLinkCount(notLinkCount);
         // 无需监测友链总数
-        notRequiredLinkCount = notLinkCount;
+        if (ArrayUtils.isNotEmpty(notRequiredMonitorLinks)) {
+            notRequiredLinkCount = notRequiredMonitorLinks.length;
+        }
 
-        log.info("{}【{}】友链监测中，友链总数：【{}】,无需监测友链总数：【{}】", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, allLinkCount, notLinkCount);
+        log.info("{}【{}】友链监测中，友链总数：【{}】,无需监测友链总数：【{}】", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, allLinkCount, notRequiredLinkCount);
 
         // 获取全部的友链页面路由
         String[] allFriendLinkRoutes = LinksHealthMonitorUtils.getAllFriendLinkRoutes(config);

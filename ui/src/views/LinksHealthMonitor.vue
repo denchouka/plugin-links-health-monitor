@@ -64,8 +64,6 @@ interface Config {
   customizedCron: string
   customizedCronAvailable: string
   cronExpression: string
-  linkCount: string
-  notRequiredLinkCount: string
 
 }
 // 插件配置初始化
@@ -74,8 +72,6 @@ const config = ref<Config>({
   customizedCron: '-',
   customizedCronAvailable: '-',
   cronExpression: '-',
-  linkCount: '-',
-  notRequiredLinkCount: '-'
 })
 
 // 友链监测记录
@@ -124,9 +120,7 @@ const fetchMonitorResult = async () => {
             ? '是'
             : '否'
           : '-',
-        cronExpression: data.cronExpression,
-        linkCount: data.linkCount,
-        notRequiredLinkCount: data.notRequiredLinkCount
+        cronExpression: data.cronExpression
       }
 
       // 友链监测记录
@@ -244,7 +238,7 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                       p-id="65399"
                     ></path>
                   </svg>
-                  插件配置
+                  执行规则
                 </div>
               </div>
               <div class="card-content">
@@ -263,14 +257,6 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                 <div class="info-item">
                   <span class="label">执行任务的Cron表达式</span>
                   <span class="value">{{ config.cronExpression }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">友链总数</span>
-                  <span class="value">{{ config.linkCount }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">无需监测友链总数</span>
-                  <span class="value">{{ config.notRequiredLinkCount }}</span>
                 </div>
               </div>
             </div>
