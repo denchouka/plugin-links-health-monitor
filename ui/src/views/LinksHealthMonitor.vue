@@ -570,14 +570,17 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       max-width: 200px;
     }
 
+    /* 临时添加调试边框 */
     .logo-column {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      text-align: center;
+      vertical-align: middle;
+      padding: 0 !important;
 
       .link-logo {
         height: 30px;
         width: 30px;
+        display: block !important;
+        margin: 0 auto !important;
       }
     }
 
