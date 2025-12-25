@@ -60,16 +60,12 @@ const fetchTaskStatus = async () => {
 
 // 插件配置
 interface Config {
-  customizedCronEnable: string
-  customizedCron: string
   customizedCronAvailable: string
   cronExpression: string
 
 }
 // 插件配置初始化
 const config = ref<Config>({
-  customizedCronEnable: '-',
-  customizedCron: '-',
   customizedCronAvailable: '-',
   cronExpression: '-',
 })
@@ -109,13 +105,9 @@ const fetchMonitorResult = async () => {
     .get('/apis/result.linkshealthmonitor.tch.cool/v1alpha1/latestResult')
     .then((res) => {
       const data = res.data.resultSpec
-      console.log('结果...')
-      console.log(data)
       // 插件配置
       config.value = {
-        customizedCronEnable: data.customizedCronEnable ? '是' : '否',
-        customizedCron: data.customizedCronEnable ? data.customizedCron : '-',
-        customizedCronAvailable: data.customizedCronEnable
+         customizedCronAvailable: data.customizedCronEnable
           ? data.customizedCronAvailable
             ? '是'
             : '否'
@@ -243,20 +235,12 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
               </div>
               <div class="card-content">
                 <div class="info-item">
-                  <span class="label">是否启用自定义Cron表达式</span>
-                  <span class="value">{{ config.customizedCronEnable }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">自定义Cron</span>
-                  <span class="value">{{ config.customizedCron }}</span>
+                  <span class="label">执行任务的Cron表达式</span>
+                  <span class="value">{{ config.cronExpression }}</span>
                 </div>
                 <div class="info-item">
                   <span class="label">自定义Cron是否可用</span>
                   <span class="value">{{ config.customizedCronAvailable }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">执行任务的Cron表达式</span>
-                  <span class="value">{{ config.cronExpression }}</span>
                 </div>
               </div>
             </div>

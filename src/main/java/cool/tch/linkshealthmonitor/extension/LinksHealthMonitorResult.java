@@ -31,9 +31,6 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         private Boolean customizedCronEnable;
 
-        // 自定义cron
-        private String customizedCron;
-
         // 自定义Cron是否可用
         @Schema(defaultValue = "true")
         private Boolean customizedCronAvailable;

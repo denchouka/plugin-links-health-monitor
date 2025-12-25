@@ -117,7 +117,6 @@ public class LinksHealthMonitorTask {
         resultSpec.setCustomizedCronEnable(config.isCustomizedCronEnable());
         // 自定义cron
         String customizedCron = config.getCustomizedCron();
-        resultSpec.setCustomizedCron(customizedCron);
         // 自定义Cron是否可用
         resultSpec.setCustomizedCronAvailable(LinksHealthMonitorUtils.checkCronExpression(customizedCron));
         // 执行任务的Cron表达式
