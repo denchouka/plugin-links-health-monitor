@@ -4,6 +4,7 @@ import { VPageHeader, VCard, IconDashboard } from '@halo-dev/components'
 import { axiosInstance } from '@halo-dev/api-client'
 import { TaskStatus, getTaskStatusLabel, isShowResult, isShowNextScheduledExecution } from '../enum/TaskStatus'
 import BooleanIcon from '@/components/BooleanIcon.vue'
+import InfoIcon from '@/components/InfoIcon.vue'
 
 // 模拟从接口获取的任务状态（默认未创建）
 const taskStatus = ref<TaskStatus>(TaskStatus.UNCREATED)
@@ -179,31 +180,48 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
               </div>
               <div class="card-content">
                 <div class="info-item">
-                  <span class="label">任务的计划执行时间</span>
+                  <span class="label">
+                    计划时间
+                    <InfoIcon title="任务的计划执行时间" />
+                  </span>
                   <span class="value">{{ status.lastScheduledExecution }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="label">任务的执行开始时间</span>
+                  <span class="label">
+                    开始时间
+                    <InfoIcon title="任务的执行开始时间" />
+                  </span>
                   <span class="value">{{ status.lastActualExecution }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="label">任务的执行完成时间</span>
+                  <span class="label">
+                    完成时间
+                    <InfoIcon title="任务的执行完成时间" /></span>
                   <span class="value">{{ status.lastCompletionExecution }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="label">任务的实际执行时长</span>
+                  <span class="label">
+                    执行时长
+                    <InfoIcon title="任务的实际执行时长" />
+                  </span>
                   <span class="value">{{ status.lastCompletionTime }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="label">下次任务的计划执行时间</span>
+                  <span class="label">
+                    下次执行
+                    <InfoIcon title="下次任务的计划执行时间" />
+                  </span>
                   <span class="value">{{ status.nextScheduledExecution }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="label">距离下次任务执行的剩余时间</span>
+                  <span class="label">
+                    剩余时间
+                    <InfoIcon title="距离下次任务执行的剩余时间" />
+                  </span>
                   <span class="value">{{ status.remainingTime }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="label">友链监测进度</span>
+                  <span class="label">监测进度</span>
                   <span class="value">{{ status.linkMonitorProgress }}</span>
                 </div>
               </div>
@@ -465,6 +483,9 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
     .label {
       color: $text-light;
       font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .value {
