@@ -135,6 +135,8 @@ onMounted(() => {
 const onLinkLogoUrlClick = async (linkUrl: string) => {
   await navigator.clipboard.writeText(linkUrl)
 }
+
+const hoveredId = ref(0)
 </script>
 
 <template>
@@ -335,10 +337,14 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                     <td class="logo-column">
                       <img
                         class="link-logo"
-                        :title="'点击复制: ' + record.linkLogo"
                         :src="record.linkLogo"
                         @click="onLinkLogoUrlClick(record.linkLogo)"
+                        @mouseenter="hoveredId = record.no"
+                        @mouseleave="hoveredId = 0"
                       >
+                      <div v-if="hoveredId === record.no" class="custom-tooltip">
+                        点击复制: {{ record.linkLogo }}
+                      </div>
                     </td>
                     <!-- 友链分组 -->
                     <td class="group-column">{{ record.linkGroupDisplayName ?? '-' }}</td>
@@ -586,6 +592,17 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
         width: 30px;
         display: block !important;
         margin: 0 auto !important;
+      }
+
+      .custom-tooltip {
+        position: fixed;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        z-index: 1000;
+        pointer-events: none;
       }
     }
 
