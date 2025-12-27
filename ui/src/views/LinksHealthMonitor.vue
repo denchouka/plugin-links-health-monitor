@@ -154,7 +154,7 @@ const hoveredId = ref(0)
           <div class="status-cards">
 
             <!-- 任务状态start -->
-            <div class="card task-status">
+            <div class="card">
               <div class="card-header">
                 <div class="card-title">
                   <svg
@@ -231,7 +231,7 @@ const hoveredId = ref(0)
             <!-- 任务状态end -->
 
             <!-- 插件配置start -->
-            <div class="card plugin-config">
+            <div class="card">
               <div class="card-header">
                 <div class="card-title">
                   <svg
@@ -421,6 +421,7 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
     align-items: center;
     padding: 10px 20px;
     border-bottom: 1px solid $border-color;
+    height: 55px;
 
     .card-title {
       display: flex;
