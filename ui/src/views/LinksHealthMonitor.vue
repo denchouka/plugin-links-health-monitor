@@ -311,29 +311,29 @@ const hoveredId = ref(0)
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>网站地址</th>
                     <th>网站名称</th>
-                    <th>网站Logo</th>
-                    <th>友链分组</th>
+                    <th>网站地址</th>
+                    <th>网站图标</th>
+                    <th>所属分组</th>
                     <th>网站是否可访问</th>
-                    <th>Logo是否可访问</th>
-                    <th>网站名称是否未变更</th>
+                    <th>图标是否可访问</th>
                     <th>网站最新名称</th>
-                    <th>是否可以获取友链页面路由</th>
-                    <th>是否添加本站友链</th>
+                    <th>网站名称是否一致</th>
+                    <th>网站友链页面路由</th>
+                    <th>对方是否已添加本站友链</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(record, index) in records" :key="index">
                     <!-- No -->
                     <td class="no-column">{{ record.no }}</td>
+                    <!-- 网站名称 -->
+                    <td class="name-column">{{ record.linkDisplayName }}</td>
                     <!-- 网站地址 -->
                     <td class="url-column">
                       <a :href="record.linkUrl" target="_blank" class="url-link">{{ record.linkUrl }}</a>
                     </td>
-                    <!-- 网站名称 -->
-                    <td class="name-column">{{ record.linkDisplayName }}</td>
-                    <!-- 网站Logo -->
+                    <!-- 网站图标 -->
                     <td class="logo-column">
                       <img
                         class="link-logo"
@@ -346,27 +346,27 @@ const hoveredId = ref(0)
                         点击复制: {{ record.linkLogo }}
                       </div>
                     </td>
-                    <!-- 友链分组 -->
+                    <!-- 所属分组 -->
                     <td class="group-column">{{ record.linkGroupDisplayName ?? '-' }}</td>
                     <!-- 网站是否可访问-->
                     <td>
                       <BooleanIcon :value="record.websiteAccessible" />
                     </td>
-                    <!-- Logo是否可访问-->
+                    <!-- 图标是否可访问-->
                     <td>
                       <BooleanIcon v-if="record.websiteAccessible" :value="record.logoAccessible" />
                     </td>
-                    <!-- 网站名称是否变更 -->
+                    <!-- 网站最新名称 -->
+                    <td class="name-column">{{ record.latestDisplayName }}</td>
+                    <!-- 网站名称是否一致 -->
                     <td>
                       <BooleanIcon v-if="record.websiteAccessible" :value="record.displayNameChanged" />
                     </td>
-                    <!-- 网站最新名称 -->
-                    <td class="name-column">{{ record.latestDisplayName }}</td>
-                    <!-- 是否可以获取友链页面路由 -->
+                    <!-- 网站友链页面路由 -->
                     <td>
                       <BooleanIcon v-if="record.websiteAccessible" :value="record.getFriendLinkRoute" />
                     </td>
-                    <!-- 是否添加本站友链 -->
+                    <!-- 对方是否已添加本站友链 -->
                     <td>
                       <BooleanIcon v-if="record.websiteAccessible" :value="record.containsOurLink" />
                     </td>
