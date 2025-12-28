@@ -92,8 +92,8 @@ interface Record {
   displayNameChanged: boolean
   // 网站的最新名称
   latestDisplayName: string
-  // 是否可以获取友链页面路由
-  getFriendLinkRoute: boolean
+  // 友链页面路由
+  friendLinkRoute: boolean
   // 是否包含本站友链
   containsOurLink: boolean
 }
@@ -363,8 +363,8 @@ const hoveredId = ref(0)
                       <BooleanIcon v-if="record.websiteAccessible" :value="record.displayNameChanged" />
                     </td>
                     <!-- 网站友链页面路由 -->
-                    <td>
-                      <BooleanIcon v-if="record.websiteAccessible" :value="record.getFriendLinkRoute" />
+                    <td class="url-column">
+                      <a :href="record.linkUrl" target="_blank" class="url-link">{{ record.friendLinkRoute }}</a>
                     </td>
                     <!-- 对方是否已添加本站友链 -->
                     <td>

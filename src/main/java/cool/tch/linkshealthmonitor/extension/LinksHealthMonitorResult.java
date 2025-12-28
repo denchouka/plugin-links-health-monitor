@@ -80,8 +80,8 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         // 网站的最新名称（有变更的情况下）
         private String latestDisplayName;
 
-        // 是否可以获取友链页面路由
-        private boolean getFriendLinkRoute;
+        // 友链页面路由
+        private String friendLinkRoute;
 
         // 是否包含本站友链
         private boolean containsOurLink;

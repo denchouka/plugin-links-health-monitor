@@ -221,12 +221,14 @@ public class LinksHealthMonitorUtils {
                 break;
             }
         }
-        checkRecord.setGetFriendLinkRoute(getFriendLinkRoute);
 
         // 获取不到友链页面路由时直接结束
         if (!getFriendLinkRoute) {
             return;
         }
+
+        // 友链页面路由
+        checkRecord.setFriendLinkRoute(friendLinkUrl);
 
         // 是否包含本站友链
         try{
