@@ -93,7 +93,7 @@ interface Record {
   // 网站的最新名称
   latestDisplayName: string
   // 友链页面路由
-  friendLinkRoute: boolean
+  friendLinkRoute: string
   // 是否包含本站友链
   containsOurLink: boolean
 }
@@ -135,8 +135,6 @@ onMounted(() => {
 const onLinkLogoUrlClick = async (linkUrl: string) => {
   await navigator.clipboard.writeText(linkUrl)
 }
-
-const hoveredId = ref(0)
 </script>
 
 <template>
@@ -313,14 +311,23 @@ const hoveredId = ref(0)
                     <th>No</th>
                     <th>网站名称</th>
                     <th>网站地址</th>
-                    <th>网站图标</th>
+                    <th>
+                      网站图标
+                      <InfoIcon title="点击复制图标地址" :tooltip-top="false" />
+                    </th>
                     <th>所属分组</th>
                     <th>网站是否可访问</th>
                     <th>图标是否可访问</th>
                     <th>网站最新名称</th>
-                    <th>网站名称是否一致</th>
-                    <th>网站友链页面路由</th>
-                    <th>对方是否已添加本站友链</th>
+                    <th>
+                      网站名称是否一致
+                      <InfoIcon title="网站最新名称取自网站实时标题，包含网站名称则视为一致" :tooltip-top="false" />
+                    </th>
+                    <th>
+                      网站友链页面路由
+                      <InfoIcon title="无法获取网站友链页面路由时，可在插件的基本设置里添加该网站的友链页面路由" :tooltip-top="false" />
+                    </th>
+                    <th>对方是否已添加本站为友链</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -339,12 +346,7 @@ const hoveredId = ref(0)
                         class="link-logo"
                         :src="record.linkLogo"
                         @click="onLinkLogoUrlClick(record.linkLogo)"
-                        @mouseenter="hoveredId = record.no"
-                        @mouseleave="hoveredId = 0"
                       >
-                      <div v-if="hoveredId === record.no" class="custom-tooltip">
-                        点击复制: {{ record.linkLogo }}
-                      </div>
                     </td>
                     <!-- 所属分组 -->
                     <td class="group-column">{{ record.linkGroupDisplayName ?? '-' }}</td>
@@ -364,7 +366,7 @@ const hoveredId = ref(0)
                     </td>
                     <!-- 网站友链页面路由 -->
                     <td class="url-column">
-                      <a :href="record.linkUrl" target="_blank" class="url-link">{{ record.friendLinkRoute }}</a>
+                      <a :href="record.friendLinkRoute" target="_blank" class="url-link">{{ record.friendLinkRoute }}</a>
                     </td>
                     <!-- 对方是否已添加本站友链 -->
                     <td>
@@ -566,10 +568,11 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       .url-link {
         color: $primary-color;
         text-decoration: none;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         display: block;
+        word-break: break-all; /* 主要解决长URL换行 */
+        word-wrap: break-word; /* 兼容性备用 */
+        overflow-wrap: break-word; /* 标准属性 */
+        white-space: normal;
 
         &:hover {
           text-decoration: underline;
@@ -582,7 +585,6 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       max-width: 200px;
     }
 
-    /* 临时添加调试边框 */
     .logo-column {
       text-align: center;
       vertical-align: middle;
@@ -593,17 +595,6 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
         width: 30px;
         display: block !important;
         margin: 0 auto !important;
-      }
-
-      .custom-tooltip {
-        position: fixed;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-        z-index: 1000;
-        pointer-events: none;
       }
     }
 
