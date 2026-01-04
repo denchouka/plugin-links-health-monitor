@@ -23,40 +23,6 @@ spec:
           validation: required
           placeholder: 请输入自定义6位cron表达式，6位cron必须遵循「秒 分 时 日 月 星期」的格式
           help: 用于配置监测友链的定时任务的时间表达式，Cron表达式格式有误时使用默认配置。
-        - $formkit: select
-          name: notRequiredMonitorLinks
-          key: notRequiredMonitorLinks
-          id: notRequiredMonitorLinks
-          label: 无需监测友链
-          placeholder: 请选择不需要监测的友链。
-          multiple: true
-          searchable: true
-          action: /apis/api.plugin.halo.run/v1alpha1/plugins/PluginLinks/links
-          requestOption:
-            method: GET
-            pageField: page
-            sizeField: size
-            totalField: total
-            itemsField: items
-            labelField: spec.displayName
-            valueField: metadata.name
-            fieldSelectorKey: spec.displayName
-          help: 请选择不需要监测的友链
-        - $formkit: list
-          name: friendLinkRoutes
-          key: friendLinkRoutes
-          id: friendLinkRoutes
-          label: 友链页面路由
-          addLabel: 添加路由
-          min: 0
-          max: 10
-          itemType: string
-          help: 友链网站的友链页面路由，默认路由不足时添加。
-          children:
-            - $formkit: text
-              index: "$index"
-              validation: required
-              placeholder: 要添加的友链页面路由，如/links
         - $formkit: group
           name: topsText
           label: 提示
@@ -70,12 +36,4 @@ spec:
                           2.定时任务默认时区 Asia/Shanghai。
                           <br>
                           3.友链监测时本站地址取自概览-外部访问地址，请确保已设置过外部访问地址。
-                          <br>
-                          4.默认友链网站的友链页面路由如下，用于监测友链网站是否添加本站友链。
-                          <br>
-                          /links
-                          <br>
-                          /link
-                          <br>
-                          /friends
                           "
