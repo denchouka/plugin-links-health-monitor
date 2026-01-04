@@ -22,6 +22,7 @@ import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR
 import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
 import static cool.tch.linkshealthmonitor.constant.Constant.LOCAL_DATE_TIME_OUTPUT_FORMATTER;
 import static cool.tch.linkshealthmonitor.constant.Constant.NEXT_TASK_TIME_PAST;
+import static cool.tch.linkshealthmonitor.task.LinksHealthMonitorUtils.getLinkMonitorProgress;
 import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.COMPLETED;
 import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.CREATED;
 import static cool.tch.linkshealthmonitor.task.MonitorableScheduledFuture.TaskStatus.FAILED;
@@ -134,10 +135,12 @@ public class MonitorableScheduledFuture {
 
     /**
      * 获取任务状态信息（可对外提供）
-     * @param linkMonitorProgress 友链监测进度
+     * @param allLinkCount 友链总数
+     * @param notRequiredLinkCount 无需监测友链总数
+     * @param monitoredLinkCount 已监测友链总数
      * @return 任务状态信息
      */
-    public TaskInfo getTaskInfo(String linkMonitorProgress) {
+    public TaskInfo getTaskInfo(int allLinkCount, int notRequiredLinkCount, int monitoredLinkCount) {
         TaskStatus currentStatus = status.get();
         return new TaskInfo(
             status.get().getValue(),
@@ -147,8 +150,7 @@ public class MonitorableScheduledFuture {
             getLastCompletionTime(),
             format(nextScheduledExecution),
             getRemainingTime(),
-            // 运行中或者任务成功时才显示
-            (currentStatus == RUNNING || currentStatus == COMPLETED) ? linkMonitorProgress : null
+            getLinkMonitorProgress(currentStatus, allLinkCount, notRequiredLinkCount, monitoredLinkCount)
         );
     }
 
