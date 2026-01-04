@@ -1,0 +1,24 @@
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: annotation-links-health-monitor-setting
+spec:
+  targetRef:
+    group: core.halo.run
+    kind: Link
+  formSchema:
+    - $formkit: checkbox
+      name: enableFriendLinkHealthMonitor
+      key: enableFriendLinkHealthMonitor
+      id: enableFriendLinkHealthMonitor
+      label: 启用友链健康监测
+      value: false
+      help: 开启后，会启用友链健康监测，请输入友链页面地址
+    - $formkit: url
+      if: $get(enableFriendLinkHealthMonitor).value === true
+      name: friendLinkUrl
+      key: friendLinkUrl
+      id: friendLinkUrl
+      label: 友链页面地址
+      validation: required
+      placeholder: 请输入友链页面地址，如https://tch.cool/links
