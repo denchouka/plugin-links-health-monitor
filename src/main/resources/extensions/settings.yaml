@@ -21,7 +21,7 @@ spec:
           id: customizedCron
           label: 自定义6位cron表达式
           validation: required
-          placeholder: 请输入自定义6位cron表达式，6位cron必须遵循「秒 分 时 日 月 星期」的格式
+          placeholder: 请输入自定义6位cron表达式，6位Cron必须遵循「秒 分 时 日 月 星期」的格式
           help: 用于配置监测友链的定时任务的时间表达式，Cron表达式格式有误时使用默认配置。
         - $formkit: group
           name: topsText
@@ -31,7 +31,7 @@ spec:
               attrs:
                 class: "formkit-help text-xs mt-2 text-gray-500 flex items-center mb-1 cursor-pointer"
                 innerHTML: "
-                          1.请注意自定义Cron的间隔周期较短时，短期内频繁执行任务会给系统带来负担。
+                          1.请注意自定义Cron表达式的间隔周期较短时，短期内频繁执行任务会给系统带来负担。
                           <br>
                           2.定时任务默认时区 Asia/Shanghai。
                           <br>

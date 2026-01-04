@@ -221,7 +221,7 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                   <span class="value">{{ status.remainingTime }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="label">监测进度</span>
+                  <span class="label">友链健康监测进度</span>
                   <span class="value">{{ status.linkMonitorProgress }}</span>
                 </div>
               </div>

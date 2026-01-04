@@ -21,4 +21,4 @@ spec:
       id: friendLinkUrl
       label: 友链页面地址
       validation: required
-      placeholder: 请输入友链页面地址，如https://tch.cool/links
+      placeholder: 请输入友链页面地址，如https://example.com/links

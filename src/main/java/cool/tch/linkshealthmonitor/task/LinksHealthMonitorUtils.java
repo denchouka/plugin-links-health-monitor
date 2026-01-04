@@ -1,6 +1,5 @@
 package cool.tch.linkshealthmonitor.task;
 
-import cool.tch.linkshealthmonitor.config.LinksHealthMonitorConfig;
 import cool.tch.linkshealthmonitor.extension.LinksHealthMonitorResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,12 +12,9 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import static cool.tch.linkshealthmonitor.constant.Constant.CUSTOM_MODEL_METADATA_NAME_PREFIX;
-import static cool.tch.linkshealthmonitor.constant.Constant.DEFAULT_FRIEND_LINK_ROUTES;
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_REQUEST_METHOD_GET;
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_REQUEST_USER_AGENT;
 import static cool.tch.linkshealthmonitor.constant.Constant.HTTP_TIMEOUT_MS;
@@ -58,37 +54,6 @@ public class LinksHealthMonitorUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_OUTPUT_FORMATTER);
         ZonedDateTime now = ZonedDateTime.now();
         return now.format(formatter);
-    }
-
-    /**
-     * 获取全部的友链页面路由
-     * @param config 插件配置
-     * @return 全部的友链页面路由，默认路由在前
-     */
-    public static String[] getAllFriendLinkRoutes(LinksHealthMonitorConfig config) {
-        // 插件设置页面添加的路由
-        String[] friendLinkRoutes = config.getFriendLinkRoutes();
-
-        Stream<String> friendLinkRoutesStream = (friendLinkRoutes == null || friendLinkRoutes.length == 0) ? Stream.empty()
-            : Arrays.stream(friendLinkRoutes)
-                .map(LinksHealthMonitorUtils::routeInitProcessing)
-                // 初始化处理后先去重
-                .distinct()
-                .filter(LinksHealthMonitorUtils::isValidAndNonRootRoute)
-                .map(LinksHealthMonitorUtils::normalizeRoute)
-                // 再次判空（防御）
-                .filter(route -> !route.isEmpty())
-                // 去重
-                .distinct();
-
-        // 默认的友链页面路由
-        Stream<String> defaultFriendLinkRoutesStream = Arrays.stream(DEFAULT_FRIEND_LINK_ROUTES);
-
-        // 默认的友链页面路由在前
-        return Stream.concat(defaultFriendLinkRoutesStream, friendLinkRoutesStream)
-            // 结果继续去重
-            .distinct()
-            .toArray(String[]::new);
     }
 
     /**
@@ -210,35 +175,13 @@ public class LinksHealthMonitorUtils {
     /**
      * 监测网站是否包含本站友链
      *
-     * @param url 网站url
      * @param ourUrl 本站外部访问地址
-     * @param allFriendLinkRoutes 全部的友链页面路由
+     * @param friendLinkUrl 友链页面地址
      * @param checkRecord 监测记录
      */
-    public static void isContainsOurLink(String url, String ourUrl, String[] allFriendLinkRoutes, LinksHealthMonitorResult.LinkHealthMonitorRecord checkRecord) {
-        // 获取本站外部地址失败
-        if (StringUtils.isBlank(ourUrl)) {
-            return;
-        }
-
-        // 是否可以获取友链页面路由（默认不可以）
-        boolean getFriendLinkRoute = false;
-        // 完整的友链页面url
-        String friendLinkUrl = null;
-
-        // 遍历全部的友链页面路由
-        for (String route : allFriendLinkRoutes) {
-            // 拼接完整url，并检查是否可以访问
-            String wholeUrl = StringUtils.join(url, route);
-            if (isUrlAccessible(wholeUrl)) {
-                getFriendLinkRoute = true;
-                friendLinkUrl = wholeUrl;
-                break;
-            }
-        }
-
-        // 获取不到友链页面路由时直接结束
-        if (!getFriendLinkRoute) {
+    public static void isContainsOurLink(String ourUrl, String friendLinkUrl, LinksHealthMonitorResult.LinkHealthMonitorRecord checkRecord) {
+        // 获取本站外部地址或者友链页面地址失败
+        if (StringUtils.isBlank(ourUrl) || StringUtils.isBlank(friendLinkUrl)) {
             return;
         }
 

@@ -53,4 +53,8 @@ public class Constant {
 
     // 路径分隔符
     public static final String PATH_SEPARATOR = "/";
+
+    // Link表达增加的元数据
+    public static final String ANNOTATIONS_FIELD_ENABLE_MONITOR = "enableFriendLinkHealthMonitor";
+    public static final String ANNOTATIONS_FIELD_FRIEND_LINK_URL = "friendLinkUrl";
 }
