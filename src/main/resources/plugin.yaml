@@ -7,7 +7,7 @@ metadata:
   name: links-health-monitor
 spec:
   enabled: true
-  requires: ">=2.21.0"
+  requires: ">=2.22.0"
   author:
     name: Denchouka
     website: https://tch.cool
@@ -20,7 +20,7 @@ spec:
   configMapName: links-health-monitor-setting-configMap
   settingName: links-health-monitor-setting
   pluginDependencies:
-    "PluginLinks": ">=1.6.1"
+    "PluginLinks": ">=1.7.0"
   license:
     - name: "GPL-3.0"
       url: "https://github.com/denchouka/plugin-links-health-monitor/blob/main/LICENSE"
