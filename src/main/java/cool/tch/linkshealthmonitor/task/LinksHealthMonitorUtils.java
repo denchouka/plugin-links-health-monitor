@@ -316,12 +316,19 @@ public class LinksHealthMonitorUtils {
 
     /**
      * 获取友链监测进度
+     * @param currentStatus 当前任务状
      * @param allLinkCount 友链总数
      * @param notRequiredLinkCount 无需监测友链总数
      * @param monitoredLinkCount 已监测友链总数
      * @return
      */
-    public static String getLinkMonitorProgress(int allLinkCount, int notRequiredLinkCount, int monitoredLinkCount) {
-        return monitoredLinkCount + "/" + allLinkCount + "（无需监测友链数" + notRequiredLinkCount + "）";
+    public static String getLinkMonitorProgress(MonitorableScheduledFuture.TaskStatus currentStatus, int allLinkCount, int notRequiredLinkCount, int monitoredLinkCount) {
+        // 运行中或者任务成功时才显示
+        return switch (currentStatus) {
+            case RUNNING -> String.format("%d/%d", monitoredLinkCount, allLinkCount);
+            case COMPLETED -> String.format("%d/%d（无需监测友链数%d）",
+                monitoredLinkCount, allLinkCount, notRequiredLinkCount);
+            default -> null;
+        };
     }
 }
