@@ -11,7 +11,7 @@
 https://tch.cool/archives/links-health-monitor
 
 ## 安装要求
-- Halo 2.21.0 或更高版本
+- Halo 2.22.0 或更高版本
 
 ## 安装方式
 ### 方式一：应用市场安装（推荐）
