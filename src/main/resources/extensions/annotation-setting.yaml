@@ -12,10 +12,11 @@ spec:
       key: enableFriendLinkHealthMonitor
       id: enableFriendLinkHealthMonitor
       label: 启用友链健康监测
-      value: false
+      on-value: "true"
+      off-value: "false"
       help: 开启后，会启用友链健康监测，请输入友链页面地址
     - $formkit: url
-      if: $get(enableFriendLinkHealthMonitor).value === true
+      if: $get(enableFriendLinkHealthMonitor).value === "true"
       name: friendLinkUrl
       key: friendLinkUrl
       id: friendLinkUrl
