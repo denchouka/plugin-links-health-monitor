@@ -313,7 +313,7 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                     <th>网站地址</th>
                     <th>
                       网站图标
-                      <InfoIcon title="点击复制图标地址" :tooltip-top="false" />
+                      <InfoIcon title="点击图标可复制图标地址" :tooltip-top="false" />
                     </th>
                     <th>所属分组</th>
                     <th>网站是否可访问</th>
@@ -323,10 +323,7 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                       网站名称是否一致
                       <InfoIcon title="网站最新名称取自网站实时标题，包含网站名称则视为一致" :tooltip-top="false" />
                     </th>
-                    <th>
-                      网站友链页面路由
-                      <InfoIcon title="无法获取网站友链页面路由时，可在插件的基本设置里添加该网站的友链页面路由" :tooltip-top="false" />
-                    </th>
+                    <th>网站友链页面路由</th>
                     <th>对方是否已添加本站为友链</th>
                   </tr>
                 </thead>
