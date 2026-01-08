@@ -135,6 +135,10 @@ onMounted(() => {
 const onLinkLogoUrlClick = async (linkUrl: string) => {
   await navigator.clipboard.writeText(linkUrl)
 }
+// 查看无需监测友链
+const handleClick = () => {
+  console.log('按钮被点击了');
+}
 </script>
 
 <template>
@@ -290,6 +294,13 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
                   任务状态为「任务成功」时才显示友链监测记录，因此若自定义Cron的间隔周期较短时，定时任务会频繁执行。
                 </p>
               </div>
+              <!-- 无需监测友链 -->
+              <div
+                class="button-div"
+                @click="handleClick"
+              >
+                查看无需监测友链
+              </div>
             </div>
 
             <!-- 无数据 -->
@@ -438,7 +449,6 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       font-size: 0.8rem;
       font-weight: 500;
       letter-spacing: 0.5px;
-      text-transform: uppercase;
       transition: all 0.2s ease;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
@@ -455,6 +465,23 @@ $box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
       border-radius: 50%;
       background-color: currentColor;
       animation: pulse 2s infinite;
+    }
+
+    .button-div {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid transparent;
+    }
+
+    .button-div:hover {
+      background-color: rgba(228, 245, 254);
+      border: 1px solid rgba(14, 165, 233, 0.2);
     }
   }
 
