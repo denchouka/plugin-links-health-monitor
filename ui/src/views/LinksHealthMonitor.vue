@@ -136,8 +136,9 @@ const onLinkLogoUrlClick = async (linkUrl: string) => {
   await navigator.clipboard.writeText(linkUrl)
 }
 // 查看无需监测友链
+const isShowNoNeedMonitorLinks = ref<boolean>(false)
 const handleClick = () => {
-  console.log('按钮被点击了');
+  isShowNoNeedMonitorLinks.value = !isShowNoNeedMonitorLinks.value
 }
 </script>
 
@@ -296,10 +297,11 @@ const handleClick = () => {
               </div>
               <!-- 无需监测友链 -->
               <div
+                v-if="isShowResult(taskStatus)"
                 class="button-div"
                 @click="handleClick"
               >
-                查看无需监测友链
+                {{isShowNoNeedMonitorLinks ? "无需监测友链" : "友链监测记录"}}
               </div>
             </div>
 
@@ -314,8 +316,8 @@ const handleClick = () => {
               <p>暂无友链监测记录</p>
             </div>
 
-            <!-- 有数据 -->
-            <div v-else class="table-container">
+            <!-- 有数据 start -->
+            <div v-if="isShowResult(taskStatus) && !isShowNoNeedMonitorLinks" class="table-container">
               <table class="record-table">
                 <thead>
                   <tr>
@@ -384,6 +386,14 @@ const handleClick = () => {
                 </tbody>
               </table>
             </div>
+            <!-- 有数据 end -->
+
+            <!-- 无需监测友链 start -->
+            <div v-if="isShowResult(taskStatus) && isShowNoNeedMonitorLinks">
+              无需监测友链
+            </div>
+            <!-- 无需监测友链 end -->
+
           </div>
           <!-- 友链监测记录end -->
         </div>
