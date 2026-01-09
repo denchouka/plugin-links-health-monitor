@@ -105,6 +105,9 @@ const fetchMonitorResult = async () => {
   axiosInstance
     .get('/apis/result.linkshealthmonitor.tch.cool/v1alpha1/latestResult')
     .then((res) => {
+      // 初始状态，显示友链监测记录，不显示无需监测友链
+      isShowNoNeedMonitorLinks.value = false
+
       const data = res.data.resultSpec
       // 插件配置
       config.value = {
@@ -290,8 +293,8 @@ const handleClick = () => {
                     p-id="105836"
                   ></path>
                 </svg>
-                友链监测记录
-                <p class="tip-text">
+                {{isShowNoNeedMonitorLinks ? "无需监测友链" : "友链监测记录"}}
+                <p class="tip-text" v-if="!isShowNoNeedMonitorLinks">
                   任务状态为「任务成功」时才显示友链监测记录，因此若自定义Cron的间隔周期较短时，定时任务会频繁执行。
                 </p>
               </div>
@@ -301,7 +304,7 @@ const handleClick = () => {
                 class="button-div"
                 @click="handleClick"
               >
-                {{isShowNoNeedMonitorLinks ? "无需监测友链" : "友链监测记录"}}
+                {{isShowNoNeedMonitorLinks ? "返回友链监测记录" : "查看无需监测友链"}}
               </div>
             </div>
 
@@ -389,8 +392,43 @@ const handleClick = () => {
             <!-- 有数据 end -->
 
             <!-- 无需监测友链 start -->
-            <div v-if="isShowResult(taskStatus) && isShowNoNeedMonitorLinks">
-              无需监测友链
+            <div v-if="isShowResult(taskStatus) && isShowNoNeedMonitorLinks" class="table-container">
+              <table class="record-table">
+                <thead>
+                <tr>
+                  <th>No</th>
+                  <th>网站名称</th>
+                  <th>网站地址</th>
+                  <th>
+                    网站图标
+                    <InfoIcon title="点击图标可复制图标地址" :tooltip-top="false" />
+                  </th>
+                  <th>所属分组</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(record, index) in records" :key="index">
+                  <!-- No -->
+                  <td class="no-column">{{ record.no }}</td>
+                  <!-- 网站名称 -->
+                  <td class="name-column">{{ record.linkDisplayName }}</td>
+                  <!-- 网站地址 -->
+                  <td class="url-column">
+                    <a :href="record.linkUrl" target="_blank" class="url-link">{{ record.linkUrl }}</a>
+                  </td>
+                  <!-- 网站图标 -->
+                  <td class="logo-column">
+                    <img
+                      class="link-logo"
+                      :src="record.linkLogo"
+                      @click="onLinkLogoUrlClick(record.linkLogo)"
+                    >
+                  </td>
+                  <!-- 所属分组 -->
+                  <td class="group-column">{{ record.linkGroupDisplayName ?? '-' }}</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
             <!-- 无需监测友链 end -->
 
