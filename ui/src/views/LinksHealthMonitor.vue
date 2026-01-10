@@ -98,7 +98,21 @@ interface Record {
   containsOurLink: boolean
 }
 
-let records = ref<Record[]>([])
+// 无需监测友链记录
+interface NoMonitorRecord {
+  no: number
+  // 网站地址
+  linkUrl: string
+  // 网站名称
+  linkDisplayName: string
+  // 网站logo
+  linkLogo: string
+  // 友链分组
+  linkGroupDisplayName: string
+}
+
+const records = ref<Record[]>([])
+const noMonitorRecords = ref<NoMonitorRecord[]>([])
 
 // 获取友链监测记录
 const fetchMonitorResult = async () => {
@@ -111,7 +125,7 @@ const fetchMonitorResult = async () => {
       const data = res.data.resultSpec
       // 插件配置
       config.value = {
-         customizedCronAvailable: data.customizedCronEnable
+        customizedCronAvailable: data.customizedCronEnable
           ? data.customizedCronAvailable
             ? '是'
             : '否'
@@ -120,12 +134,16 @@ const fetchMonitorResult = async () => {
       }
 
       // 友链监测记录
-      const mappedRecords = data.linkHealthMonitorRecordList.map((item: any, index: number) => ({
+      records.value = data.linkHealthMonitorRecordList.map((item: any, index: number) => ({
         no: index + 1,
         ...item,
-      }));
+      }))
 
-      records.value = mappedRecords; // 修复赋值方式
+      // 友链监测记录
+      noMonitorRecords.value = data.linkHealthMonitorRecordList.map((item: any, index: number) => ({
+        no: index + 1,
+        ...item,
+      }))
     })
 }
 
@@ -204,7 +222,8 @@ const handleClick = () => {
                 <div class="info-item">
                   <span class="label">
                     完成时间
-                    <InfoIcon title="任务的执行完成时间" /></span>
+                    <InfoIcon title="任务的执行完成时间" />
+                  </span>
                   <span class="value">{{ status.lastCompletionExecution }}</span>
                 </div>
                 <div class="info-item">
@@ -395,38 +414,38 @@ const handleClick = () => {
             <div v-if="isShowResult(taskStatus) && isShowNoNeedMonitorLinks" class="table-container">
               <table class="record-table">
                 <thead>
-                <tr>
-                  <th>No</th>
-                  <th>网站名称</th>
-                  <th>网站地址</th>
-                  <th>
-                    网站图标
-                    <InfoIcon title="点击图标可复制图标地址" :tooltip-top="false" />
-                  </th>
-                  <th>所属分组</th>
-                </tr>
+                  <tr>
+                    <th>No</th>
+                    <th>网站名称</th>
+                    <th>网站地址</th>
+                    <th>
+                      网站图标
+                      <InfoIcon title="点击图标可复制图标地址" :tooltip-top="false" />
+                    </th>
+                    <th>所属分组</th>
+                  </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(record, index) in records" :key="index">
-                  <!-- No -->
-                  <td class="no-column">{{ record.no }}</td>
-                  <!-- 网站名称 -->
-                  <td class="name-column">{{ record.linkDisplayName }}</td>
-                  <!-- 网站地址 -->
-                  <td class="url-column">
-                    <a :href="record.linkUrl" target="_blank" class="url-link">{{ record.linkUrl }}</a>
-                  </td>
-                  <!-- 网站图标 -->
-                  <td class="logo-column">
-                    <img
-                      class="link-logo"
-                      :src="record.linkLogo"
-                      @click="onLinkLogoUrlClick(record.linkLogo)"
-                    >
-                  </td>
-                  <!-- 所属分组 -->
-                  <td class="group-column">{{ record.linkGroupDisplayName ?? '-' }}</td>
-                </tr>
+                  <tr v-for="(record, index) in noMonitorRecords" :key="index">
+                    <!-- No -->
+                    <td class="no-column">{{ record.no }}</td>
+                    <!-- 网站名称 -->
+                    <td class="name-column">{{ record.linkDisplayName }}</td>
+                    <!-- 网站地址 -->
+                    <td class="url-column">
+                      <a :href="record.linkUrl" target="_blank" class="url-link">{{ record.linkUrl }}</a>
+                    </td>
+                    <!-- 网站图标 -->
+                    <td class="logo-column">
+                      <img
+                        class="link-logo"
+                        :src="record.linkLogo"
+                        @click="onLinkLogoUrlClick(record.linkLogo)"
+                      />
+                    </td>
+                    <!-- 所属分组 -->
+                    <td class="group-column">{{ record.linkGroupDisplayName ?? '-' }}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
