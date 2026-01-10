@@ -8,6 +8,7 @@ import cool.tch.linkshealthmonitor.service.CustomResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -129,7 +130,15 @@ public class LinksHealthMonitorTask {
         String normalizeUrl = LinksHealthMonitorUtils.normalizeUrl(externalUrl);
         // 本站外部地址不为空时，友链监测记录
         if(StringUtils.isNotBlank(normalizeUrl)) {
-            resultSpec.setLinkHealthMonitorRecordList(linkHealthCheck(config, resultSpec, externalUrl));
+            // 友链监测记录
+            List<LinksHealthMonitorResult.LinkHealthMonitorRecord> recordList = new ArrayList<>();
+            // 无需友链监测记录
+            List<LinksHealthMonitorResult.NoMonitorRecord> nomonitorRecordList = new ArrayList<>();
+            // 友链监测
+            linkHealthCheck(externalUrl, recordList, nomonitorRecordList);
+
+            resultSpec.setLinkHealthMonitorRecordList(recordList);
+            resultSpec.setNoMonitorRecordList(nomonitorRecordList);
         }
 
         // 元数据
@@ -150,17 +159,12 @@ public class LinksHealthMonitorTask {
     /**
      * 友链监测
      *
-     * @param config 插件配置
-     * @param resultSpec 自定义模型的对象
      * @param externalUrl 本站外部地址
-     * @return 友链监测记录
+     * @param recordList 友链监测记录
+     * @param nomonitorRecordList 无需友链监测记录
      */
-    private List<LinksHealthMonitorResult.LinkHealthMonitorRecord> linkHealthCheck(
-        LinksHealthMonitorConfig config, LinksHealthMonitorResult.ResultSpec resultSpec, String externalUrl) {
-
-        // 友链监测记录
-        List<LinksHealthMonitorResult.LinkHealthMonitorRecord> recordList =
-            new ArrayList<>();
+    private void linkHealthCheck(String externalUrl, List<LinksHealthMonitorResult.LinkHealthMonitorRecord> recordList,
+        List<LinksHealthMonitorResult.NoMonitorRecord> nomonitorRecordList) {
 
         // 查询所有的友链
         List<Link> allLinks = service.getAllLinks();
@@ -192,14 +196,6 @@ public class LinksHealthMonitorTask {
             // 给Link表单增加的元数据
             LinkMetadataAnnotations annotations = fromMap(metadata.getAnnotations());
 
-            // 是否启用友链健康监测
-            if (!annotations.isEnableFriendLinkHealthMonitor()) {
-                // 无需监测友链总数
-                notRequiredLinkCount += 1;
-                // 跳出循环
-                continue;
-            }
-
             // 监测记录
             LinksHealthMonitorResult.LinkHealthMonitorRecord checkRecord = new LinksHealthMonitorResult.LinkHealthMonitorRecord();
 
@@ -219,6 +215,17 @@ public class LinksHealthMonitorTask {
             String groupName = spec.getGroupName();
             checkRecord.setLinkGroup(groupName);
             checkRecord.setLinkGroupDisplayName(service.getGroupDisplayNameByName(groupName));
+
+            // 是否启用友链健康监测
+            if (!annotations.isEnableFriendLinkHealthMonitor()) {
+                LinksHealthMonitorResult.NoMonitorRecord noMonitorRecord = new LinksHealthMonitorResult.NoMonitorRecord();
+                BeanUtils.copyProperties(checkRecord, noMonitorRecord);
+                nomonitorRecordList.add(noMonitorRecord);
+                // 无需监测友链总数
+                notRequiredLinkCount += 1;
+                // 跳出循环
+                continue;
+            }
 
             // 功能监测
             // 网站是否可以打开
@@ -242,8 +249,6 @@ public class LinksHealthMonitorTask {
 
             recordList.add(checkRecord);
         }
-
-        return recordList;
     }
 
     /**

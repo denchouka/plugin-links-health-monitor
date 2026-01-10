@@ -39,7 +39,10 @@ public class LinksHealthMonitorResult extends AbstractExtension {
         private String cronExpression;
 
         // 友链监测记录
-        private List<LinkHealthMonitorRecord> LinkHealthMonitorRecordList;
+        private List<LinkHealthMonitorRecord> linkHealthMonitorRecordList;
+
+        // 友链监测记录
+        private List<NoMonitorRecord> noMonitorRecordList;
     }
 
     /**
@@ -85,5 +88,31 @@ public class LinksHealthMonitorResult extends AbstractExtension {
 
         // 是否包含本站友链
         private boolean containsOurLink;
+    }
+
+    /**
+     * 无需友链监测记录
+     */
+    @Data
+    public static class NoMonitorRecord {
+
+        // 友链基本信息
+        // 检索友链的key(自定义模型Link元数据的name)
+        private String linkName;
+
+        // 友链的url(自定义模型的url)
+        private String linkUrl;
+
+        // 友链的网站名称(自定义模型的displayName)
+        private String linkDisplayName;
+
+        // 友链的网站logo(自定义模型的logo)
+        private String linkLogo;
+
+        // 友链的网站分组(自定义模型的displayName)
+        private String linkGroup;
+
+        // 友链的网站分组(自定义模型的groupName对应的displayName)
+        private String linkGroupDisplayName;
     }
 }

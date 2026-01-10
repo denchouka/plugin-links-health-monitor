@@ -139,8 +139,8 @@ const fetchMonitorResult = async () => {
         ...item,
       }))
 
-      // 友链监测记录
-      noMonitorRecords.value = data.linkHealthMonitorRecordList.map((item: any, index: number) => ({
+      // 无需友链监测记录
+      noMonitorRecords.value = data.noMonitorRecordList.map((item: any, index: number) => ({
         no: index + 1,
         ...item,
       }))
