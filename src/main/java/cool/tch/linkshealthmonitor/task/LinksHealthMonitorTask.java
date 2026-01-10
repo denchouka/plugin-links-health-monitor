@@ -50,14 +50,6 @@ public class LinksHealthMonitorTask {
 
     private MonitorableScheduledFuture scheduledFuture;
 
-    // 友链总数
-    private int allLinkCount = 0;
-    // 无需监测友链总数
-    private int notRequiredLinkCount = 0;
-    // 已监测友链总数
-    private int monitoredLinkCount = 0;
-
-
     /**
      * 获取插件配置
      */
@@ -102,7 +94,7 @@ public class LinksHealthMonitorTask {
             return taskInfo;
         }
 
-        return scheduledFuture.getTaskInfo(allLinkCount, notRequiredLinkCount, monitoredLinkCount);
+        return scheduledFuture.getTaskInfo();
     }
 
     /**
@@ -168,20 +160,10 @@ public class LinksHealthMonitorTask {
 
         // 查询所有的友链
         List<Link> allLinks = service.getAllLinks();
-        // 友链总数
-        if (!CollectionUtils.isEmpty(allLinks)) {
-            allLinkCount = allLinks.size();
-        }
 
-        log.info("{}【{}】友链监测中，友链总数：【{}】", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, allLinkCount);
+        log.info("{}【{}】友链监测中，友链总数：【{}】", LINKS_HEALTH_MONITOR_DESC, LINKS_HEALTH_MONITOR, allLinks.size());
 
-        // 友链监测
-        monitoredLinkCount = 0;
-        // 无需监测友链总数
-        notRequiredLinkCount = 0;
         for (Link link : allLinks) {
-            // 已监测友链总数
-            monitoredLinkCount += 1;
 
             // Link的元数据
             MetadataOperator metadata = link.getMetadata();
@@ -218,11 +200,10 @@ public class LinksHealthMonitorTask {
 
             // 是否启用友链健康监测
             if (!annotations.isEnableFriendLinkHealthMonitor()) {
+                // 无需监测友链数据
                 LinksHealthMonitorResult.NoMonitorRecord noMonitorRecord = new LinksHealthMonitorResult.NoMonitorRecord();
                 BeanUtils.copyProperties(checkRecord, noMonitorRecord);
                 nomonitorRecordList.add(noMonitorRecord);
-                // 无需监测友链总数
-                notRequiredLinkCount += 1;
                 // 跳出循环
                 continue;
             }

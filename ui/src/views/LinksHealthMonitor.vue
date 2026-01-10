@@ -18,7 +18,6 @@ interface Status {
   lastCompletionTime: string
   nextScheduledExecution: string
   remainingTime: string
-  linkMonitorProgress: string
 }
 // 任务状态初始化
 const status = ref<Status>({
@@ -28,8 +27,7 @@ const status = ref<Status>({
   lastCompletionExecution: '-',
   lastCompletionTime: '-',
   nextScheduledExecution: '-',
-  remainingTime: '-',
-  linkMonitorProgress: '_'
+  remainingTime: '-'
 })
 
 // 获取任务状态
@@ -46,8 +44,7 @@ const fetchTaskStatus = async () => {
       lastCompletionExecution: data.lastCompletionExecution ?? '-',
       lastCompletionTime: data.lastCompletionTime ?? '-',
       nextScheduledExecution: isShowNextScheduledExecution(data.taskStatus) ? (data.nextScheduledExecution ?? '-') : '-',
-      remainingTime: data.remainingTime ?? '-',
-      linkMonitorProgress: data.linkMonitorProgress ?? '-'
+      remainingTime: data.remainingTime ?? '-'
     }
 
     // 获取友链监测结果
@@ -246,10 +243,6 @@ const handleClick = () => {
                     <InfoIcon title="距离下次任务执行的剩余时间" />
                   </span>
                   <span class="value">{{ status.remainingTime }}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">友链健康监测进度</span>
-                  <span class="value">{{ status.linkMonitorProgress }}</span>
                 </div>
               </div>
             </div>
