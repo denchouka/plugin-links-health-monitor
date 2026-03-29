@@ -5,6 +5,11 @@ plugins {
 
 group = 'cool.tch.linkshealthmonitor.ui'
 
+node {
+    download = true
+    version = "22.19.0"
+}
+
 tasks.register('pnpmBuild', PnpmTask) {
     group = 'build'
     description = 'Build the UI project using pnpm'
