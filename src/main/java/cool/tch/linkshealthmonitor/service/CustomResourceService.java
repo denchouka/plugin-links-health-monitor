@@ -19,7 +19,7 @@ import java.util.List;
 
 import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR;
 import static cool.tch.linkshealthmonitor.constant.Constant.LINKS_HEALTH_MONITOR_DESC;
-import static run.halo.app.extension.index.query.QueryFactory.isNull;
+import static run.halo.app.extension.index.query.Queries.isNull;
 
 /**
  * @Author Denchouka
